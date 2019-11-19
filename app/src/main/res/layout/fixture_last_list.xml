@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        app:strokeColor="@color/colorPrimary"
+        app:strokeWidth="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/small_padding">
+
+
+            <TextView
+                android:id="@+id/date_fixture"
+                style="@style/FixtureList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@tools:sample/date/ddmmyy" />
+
+            <TextView
+                android:id="@+id/team_home"
+                style="@style/FixtureTeam"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/layout_margin"
+                android:textAlignment="textStart"
+                app:layout_constraintBottom_toBottomOf="@+id/score_home"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/score_home"
+                tools:text="@tools:sample/lorem" />
+
+            <TextView
+                android:id="@+id/team_away"
+                style="@style/FixtureTeam"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/layout_margin"
+                android:textAlignment="textEnd"
+                app:layout_constraintBottom_toBottomOf="@+id/score_away"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/score_away"
+                tools:text="@tools:sample/lorem" />
+
+
+            <TextView
+                android:id="@+id/score_home"
+                style="@style/FixtureScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/layout_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/vs_text"
+                app:layout_constraintEnd_toStartOf="@+id/vs_text"
+                app:layout_constraintTop_toTopOf="@+id/vs_text"
+                tools:text="@tools:sample/us_zipcodes" />
+
+            <TextView
+                android:id="@+id/score_away"
+                style="@style/FixtureScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/layout_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/vs_text"
+                app:layout_constraintStart_toEndOf="@+id/vs_text"
+                app:layout_constraintTop_toTopOf="@+id/vs_text"
+                tools:text="@tools:sample/us_zipcodes" />
+
+            <View
+                android:id="@+id/border_horizontal"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="@dimen/layout_margin"
+                android:background="@color/colorPrimary"
+                android:contentDescription="@string/borderline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/date_fixture"/>
+
+            <TextView
+                android:id="@+id/vs_text"
+                style="@style/FixtureList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_margin"
+                android:text="@string/vs_text"
+                app:layout_constraintEnd_toEndOf="@+id/date_fixture"
+                app:layout_constraintStart_toStartOf="@+id/date_fixture"
+                app:layout_constraintTop_toBottomOf="@+id/border_horizontal" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

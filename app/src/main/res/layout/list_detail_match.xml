@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginBottom="@dimen/layout_margin"
+        app:strokeColor="@color/colorPrimary"
+        app:strokeWidth="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/date_fixture"
+                style="@style/FixtureList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@tools:sample/date/ddmmyy" />
+
+            <TextView
+                android:id="@+id/time_fixture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/date_fixture"
+                app:layout_constraintStart_toStartOf="@+id/date_fixture"
+                app:layout_constraintTop_toBottomOf="@+id/date_fixture"
+                tools:text="@tools:sample/date/hhmmss" />
+
+            <View
+                android:id="@+id/border_horizontal_1"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="@dimen/layout_margin"
+                android:background="@color/colorPrimary"
+                android:contentDescription="@string/borderline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/time_fixture" />
+
+            <ImageView
+                android:id="@+id/logo_home"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/score_home"
+                app:layout_constraintEnd_toStartOf="@+id/score_home"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/score_home"
+                app:layout_constraintVertical_chainStyle="spread_inside"
+                tools:ignore="ContentDescription"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/team_home"
+                style="@style/FixtureTeam"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:minLines="2"
+                app:layout_constraintEnd_toEndOf="@+id/logo_home"
+                app:layout_constraintStart_toStartOf="@+id/logo_home"
+                app:layout_constraintTop_toBottomOf="@id/logo_home"
+                tools:text="@tools:sample/last_names" />
+
+            <ImageView
+                android:id="@+id/logo_away"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                app:layout_constraintBottom_toTopOf="@+id/team_away"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/score_away"
+                app:layout_constraintTop_toBottomOf="@id/border_horizontal_1"
+                tools:ignore="ContentDescription"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/team_away"
+                style="@style/FixtureTeam"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:textAlignment="center"
+                android:minLines="2"
+                app:layout_constraintEnd_toEndOf="@+id/logo_away"
+                app:layout_constraintStart_toStartOf="@+id/logo_away"
+                app:layout_constraintTop_toBottomOf="@id/logo_away"
+                tools:text="@tools:sample/last_names" />
+
+            <TextView
+                android:id="@+id/vs_text"
+                style="@style/FixtureList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/vs_text"
+                app:layout_constraintBottom_toBottomOf="@+id/score_away"
+                app:layout_constraintEnd_toStartOf="@+id/score_away"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/score_home"
+                app:layout_constraintTop_toTopOf="@+id/score_away" />
+
+            <TextView
+                android:id="@+id/score_home"
+                style="@style/FixtureScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/vs_text"
+                app:layout_constraintEnd_toStartOf="@+id/vs_text"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/logo_home"
+                app:layout_constraintTop_toTopOf="@+id/vs_text"
+                tools:text="@tools:sample/us_zipcodes" />
+
+            <TextView
+                android:id="@+id/score_away"
+                style="@style/FixtureScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/logo_away"
+                app:layout_constraintEnd_toStartOf="@+id/logo_away"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/vs_text"
+                app:layout_constraintTop_toTopOf="@+id/logo_away"
+                tools:text="@tools:sample/us_zipcodes" />
+
+            <View
+                android:id="@+id/border_horizontal_2"
+                android:layout_width="408dp"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimary"
+                android:layout_marginTop="@dimen/small_margin"
+                android:contentDescription="@string/borderline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/team_away" />
+
+            <ImageView
+                android:id="@+id/goal_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                app:layout_constraintBottom_toTopOf="@+id/border_horizontal_3"
+                app:layout_constraintEnd_toStartOf="@+id/detail_goal_away"
+                app:layout_constraintStart_toEndOf="@+id/detail_goal_home"
+                app:layout_constraintTop_toBottomOf="@+id/border_horizontal_2"
+                app:srcCompat="@drawable/ic_goal"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/detail_goal_home"
+                style="@style/FixtureTeam"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                android:textAlignment="viewStart"
+                app:layout_constraintBottom_toTopOf="@+id/border_horizontal_3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/border_horizontal_2"
+                tools:text="@tools:sample/full_names" />
+
+            <TextView
+                android:id="@+id/detail_goal_away"
+                style="@style/FixtureTeam"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:textAlignment="viewEnd"
+                app:layout_constraintBottom_toTopOf="@+id/border_horizontal_3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/border_horizontal_2"
+                tools:text="@tools:sample/full_names" />
+
+            <View
+                android:id="@+id/border_horizontal_3"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimary"
+                android:contentDescription="@string/borderline"
+                app:layout_constraintBottom_toTopOf="@id/yellow_card_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/goal_image" />
+
+            <ImageView
+                android:id="@+id/yellow_card_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                app:layout_constraintBottom_toTopOf="@id/border_horizontal_4"
+                app:layout_constraintEnd_toStartOf="@+id/yellow_card_away"
+                app:layout_constraintStart_toEndOf="@+id/yellow_card_home"
+                app:layout_constraintTop_toBottomOf="@+id/border_horizontal_3"
+                app:srcCompat="@drawable/ic_card_yellow"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/yellow_card_home"
+                style="@style/FixtureTeam"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                android:textAlignment="viewStart"
+                app:layout_constraintBottom_toBottomOf="@id/border_horizontal_4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/border_horizontal_3"
+                tools:text="@tools:sample/full_names" />
+
+            <TextView
+                android:id="@+id/yellow_card_away"
+                style="@style/FixtureTeam"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:textAlignment="viewEnd"
+                app:layout_constraintBottom_toTopOf="@id/border_horizontal_4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/border_horizontal_3"
+                tools:text="@tools:sample/full_names" />
+
+            <View
+                android:id="@+id/border_horizontal_4"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:background="@color/colorPrimary"
+                android:contentDescription="@string/borderline"
+                app:layout_constraintBottom_toTopOf="@id/red_card_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/yellow_card_image" />
+
+            <ImageView
+                android:id="@+id/red_card_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                app:layout_constraintEnd_toStartOf="@+id/red_card_away"
+                app:layout_constraintStart_toEndOf="@+id/red_card_home"
+                app:layout_constraintTop_toBottomOf="@+id/border_horizontal_4"
+                app:srcCompat="@drawable/ic_card_red"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/red_card_home"
+                style="@style/FixtureTeam"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:textAlignment="viewStart"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/border_horizontal_4"
+                tools:text="@tools:sample/full_names" />
+
+            <TextView
+                android:id="@+id/red_card_away"
+                style="@style/FixtureTeam"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:textAlignment="viewEnd"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/border_horizontal_4"
+                tools:text="@tools:sample/full_names" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

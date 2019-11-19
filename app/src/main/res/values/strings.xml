@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">KADE2</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="last_match">Last Match</string>
+    <string name="next_match">Next Match</string>
+    <string name="vs_text">:</string>
+
+    <string name="borderline">borderline</string>
+
+    <string name="strip">-</string>
+
+    <string name="search">Search</string>
+    <string name="team_can_t_be_found">Team Can\'t Be Found !!!</string>
+    <string name="enter_team_name">Enter Team Name !!</string>
+
+
+    <string name="football_league_fragment">Football League</string>
+    <string name="detail_league_fragment">Detail League</string>
+    <string name="next_match_fragment">Next Match</string>
+    <string name="last_match_fragment">Last Match</string>
+    <string name="detail_match_fragment">Detail Match</string>
+    <string name="search_team_fragment">Search Football Team</string>
+    <string name="logo_league">logo league</string>
+</resources>
