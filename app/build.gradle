@@ -69,4 +69,7 @@ dependencies {
 
     // RecyclerView
     implementation "androidx.recyclerview:recyclerview:$version_recyclerview"
+
+    // Anko SQL
+    implementation "org.jetbrains.anko:anko-sqlite:$version_anko"
 }

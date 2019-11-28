@@ -16,6 +16,7 @@
         <action
             android:id="@+id/action_home_to_searchFragment"
             app:destination="@id/searchFragment" />
+
     </fragment>
 
     <fragment
@@ -84,5 +85,13 @@
         <action
             android:id="@+id/action_searchFragment_to_detailMatchFragment"
             app:destination="@id/detailMatchFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="relawan.kade2.view.favorite.FavoriteFragment"
+        android:label="@string/favorite_match_fragment"
+        tools:layout="@layout/fragment_favorite" >
+
     </fragment>
 </navigation>

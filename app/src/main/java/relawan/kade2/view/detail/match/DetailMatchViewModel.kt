@@ -16,14 +16,6 @@ import retrofit2.Response
 
 class DetailMatchViewModel(detail: Match?, search: Search?, application: Application) : AndroidViewModel(application) {
 
-//    private val _idEventLast = MutableLiveData<LastMatch?>()
-//    private val idEventLast: LiveData<LastMatch?>
-//        get() = _idEventLast
-//
-//    private val _idEventNext = MutableLiveData<NextMatch?>()
-//    private val idEventNext: LiveData<NextMatch?>
-//        get() = _idEventNext
-
 
     private val _idDetail = MutableLiveData<Match>()
     private val idDetail: LiveData<Match>
@@ -43,13 +35,11 @@ class DetailMatchViewModel(detail: Match?, search: Search?, application: Applica
 
 
 
+
     init {
-//        _idEventLast.value = detailLast
-//        _idEventNext.value = detailNext
         _idDetail.value = detail
         _idSearch.value = search
 
-//        _event.value = idEventLast.value?.idEvent ?: idEventNext.value?.idEvent
         _event.value = idDetail.value?.idEvent ?: idSearch.value?.idEvent
 
         getDetailMatch()

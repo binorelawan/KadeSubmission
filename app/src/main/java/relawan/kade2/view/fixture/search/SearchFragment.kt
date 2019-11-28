@@ -5,6 +5,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -62,6 +63,7 @@ class SearchFragment : Fragment() {
 
         initSearch()
 
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -128,5 +130,10 @@ class SearchFragment : Fragment() {
         })
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
+        // close keyboard after click back up button
+        searchView.clearFocus()
+        return super.onOptionsItemSelected(item)
+    }
 }
