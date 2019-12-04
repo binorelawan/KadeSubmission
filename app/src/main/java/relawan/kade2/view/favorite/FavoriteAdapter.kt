@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import relawan.kade2.R
-import relawan.kade2.database.Favorite
 import relawan.kade2.databinding.ListFavoriteBinding
+import relawan.kade2.model.Match
 import relawan.kade2.utils.DateTime
 
-class FavoriteAdapter(private val favorite: List<Favorite>) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
+class FavoriteAdapter(private val favorite: List<Match>, private val onClickListener: OnClickListener) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,7 +21,9 @@ class FavoriteAdapter(private val favorite: List<Favorite>) : RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = favorite[position]
-
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(item)
+        }
         holder.bind(item)
     }
 
@@ -29,13 +31,13 @@ class FavoriteAdapter(private val favorite: List<Favorite>) : RecyclerView.Adapt
 
         private val strip = itemView.resources.getString(R.string.strip)
 
-        fun bind(item : Favorite){
-            val date = DateTime.getDate("${item.dateEvent} ${item.timeEvent}")
+        fun bind(item : Match){
+            val date = DateTime.getDate("${item.dateEvent} ${item.strTime}")
             binding.dateFixture.text = date.substringBeforeLast(";")
-            binding.teamHome.text = item.homeTeam
-            binding.teamAway.text = item.awayTeam
-            binding.scoreHome.text = item.homeScore ?: strip
-            binding.scoreAway.text = item.awayScore ?: strip
+            binding.teamHome.text = item.strHomeTeam
+            binding.teamAway.text = item.strAwayTeam
+            binding.scoreHome.text = item.intHomeScore ?: strip
+            binding.scoreAway.text = item.intAwayScore ?: strip
 
             binding.executePendingBindings()
 
@@ -52,5 +54,10 @@ class FavoriteAdapter(private val favorite: List<Favorite>) : RecyclerView.Adapt
             }
         }
 
+    }
+
+    // click listener
+    class OnClickListener(val clickListener: (favoriteMatch: Match) -> Unit) {
+        fun onClick(favoriteMatch: Match) = clickListener(favoriteMatch)
     }
 }

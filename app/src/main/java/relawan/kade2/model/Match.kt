@@ -5,62 +5,42 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Match(
-    val dateEvent: String?,
-    val dateEventLocal: String?,
-    val idAwayTeam: String?,
+    val id: Long?,
     val idEvent: String?,
-    val idHomeTeam: String?,
-    val idLeague: String?,
-    val idSoccerXML: String?,
-    val intAwayScore: String?,
-    val intAwayShots: String?,
-    val intHomeScore: String?,
-    val intHomeShots: String?,
-    val intRound: String?,
-    val intSpectators: String?,
-    val strAwayFormation: String?,
-    val strAwayGoalDetails: String?,
-    val strAwayLineupDefense: String?,
-    val strAwayLineupForward: String?,
-    val strAwayLineupGoalkeeper: String?,
-    val strAwayLineupMidfield: String?,
-    val strAwayLineupSubstitutes: String?,
-    val strAwayRedCards: String?,
-    val strAwayTeam: String?,
-    val strAwayYellowCards: String?,
-    val strBanner: String?,
-    val strCircuit: String?,
-    val strCity: String?,
-    val strCountry: String?,
-    val strDate: String?,
-    val strDescriptionEN: String?,
-    val strEvent: String?,
-    val strEventAlternate: String?,
-    val strFanart: String?,
-    val strFilename: String?,
-    val strHomeFormation: String?,
-    val strHomeGoalDetails: String?,
-    val strHomeLineupDefense: String?,
-    val strHomeLineupForward: String?,
-    val strHomeLineupGoalkeeper: String?,
-    val strHomeLineupMidfield: String?,
-    val strHomeLineupSubstitutes: String?,
-    val strHomeRedCards: String?,
-    val strHomeTeam: String?,
-    val strHomeYellowCards: String?,
-    val strLeague: String?,
-    val strLocked: String?,
-    val strMap: String?,
-    val strPoster: String?,
-    val strResult: String?,
-    val strSeason: String?,
-    val strSport: String?,
-    val strTVStation: String?,
-    val strThumb: String?,
+    val dateEvent: String?,
     val strTime: String?,
-    val strTimeLocal: String?,
-    val strTweet1: String?,
-    val strTweet2: String?,
-    val strTweet3: String?,
-    val strVideo: String?
-) : Parcelable
+    val idHomeTeam: String?,
+    val idAwayTeam: String?,
+    val strHomeTeam: String?,
+    val strAwayTeam: String?,
+    val intHomeScore: String?,
+    val intAwayScore: String?,
+    val strHomeGoalDetails: String?,
+    val strAwayGoalDetails: String?,
+    val strHomeYellowCards: String?,
+    val strAwayYellowCards: String?,
+    val strHomeRedCards: String?,
+    val strAwayRedCards: String?
+
+) : Parcelable {
+
+    companion object {
+        const val TABLE_FAVORITE: String = "TABLE_FAVORITE"
+        const val ID: String = "_ID"
+        const val ID_EVENT: String = "ID_EVENT"
+        const val DATE_EVENT: String = "DATE_EVENT"
+        const val STR_TIME: String = "TIME_EVENT"
+        const val ID_HOME_TEAM = "ID_HOME_TEAM"
+        const val ID_AWAY_TEAM = "ID_AWAY_TEAM"
+        const val STR_HOME_TEAM: String = "STR_HOME_TEAM"
+        const val STR_AWAY_TEAM: String = "STR_AWAY_TEAM"
+        const val INT_HOME_SCORE: String = "INT_HOME_SCORE"
+        const val INT_AWAY_SCORE: String = "INT_AWAY_SCORE"
+        const val STR_HOME_GOAL_DETAILS: String = "STR_HOME_GOAL_DETAILS"
+        const val STR_AWAY_GOAL_DETAILS: String = "STR_AWAY_GOAL_DETAILS"
+        const val STR_HOME_YELLOW_CARDS: String = "STR_HOME_YELLOW_CARDS"
+        const val STR_AWAY_YELLOW_CARDS: String = "STR_AWAY_YELLOW_CARDS"
+        const val STR_HOME_RED_CARDS: String = "STR_HOME_RED_CARDS"
+        const val STR_AWAY_RED_CARDS: String = "STR_AWAY_RED_CARDS"
+    }
+}

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">KADE2</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="last_match">Last Match</string>
     <string name="next_match">Next Match</string>
     <string name="vs_text">:</string>

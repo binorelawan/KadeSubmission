@@ -1,23 +1,19 @@
 package relawan.kade2.view.detail.match
 
 
-import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import org.jetbrains.anko.db.classParser
-import org.jetbrains.anko.db.delete
-import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
 import relawan.kade2.R
-import relawan.kade2.database.Favorite
 import relawan.kade2.database.database
 import relawan.kade2.databinding.FragmentDetailMatchBinding
 import relawan.kade2.model.DetailMatch
+import relawan.kade2.model.Match
 
 /**
  * A simple [Fragment] subclass.
@@ -26,7 +22,6 @@ class DetailMatchFragment : Fragment() {
 
 
 
-    // TODO test isFavorite here
     private var isFavorite: Boolean = false
     private var menuItem: Menu? = null
 
@@ -53,7 +48,7 @@ class DetailMatchFragment : Fragment() {
         // get argument from last/next match fragment or search fragment
         val detail = arguments?.let { DetailMatchFragmentArgs.fromBundle(it).detail }
         val search = arguments?.let { DetailMatchFragmentArgs.fromBundle(it).search }
-        val viewModelFactory = DetailMatchModelFactory(detail, search, application)
+        val viewModelFactory = DetailMatchModelFactory(context, detail, search, application)
 
         // viewModel
         detailMatchViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailMatchViewModel::class.java)
@@ -61,6 +56,8 @@ class DetailMatchFragment : Fragment() {
         // adapter
         val adapter = DetailMatchAdapter()
         binding.matchDetail.adapter = adapter
+
+
 
 
         // get viewModel and adapter to show list
@@ -83,13 +80,16 @@ class DetailMatchFragment : Fragment() {
                     data[0].strHomeTeam,
                     data[0].strHomeYellowCards,
                     data[0].strTime)
+
+                // check state
+                favoriteState()
+
                 binding.progressBar.visibility = View.GONE
                 adapter.data = data
             }
         })
 
         setHasOptionsMenu(true)
-        favoriteState()
         return binding.root
     }
 
@@ -99,7 +99,6 @@ class DetailMatchFragment : Fragment() {
         inflater.inflate(R.menu.favorite_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
         menuItem = menu
-        setFavorite()
 
     }
 
@@ -108,7 +107,7 @@ class DetailMatchFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.add_favorite -> {
-                if (isFavorite) deleteFavorite() else insertFavorite()
+                if (isFavorite) removeFavorites() else addFavorites()
 
                 isFavorite = !isFavorite
                 setFavorite()
@@ -122,7 +121,13 @@ class DetailMatchFragment : Fragment() {
     }
 
 
+    private fun addFavorites(){
+        detailMatchViewModel.insertFavorite(dataDetail)
+    }
 
+    private fun removeFavorites(){
+        detailMatchViewModel.deleteFavorite(dataDetail)
+    }
 
     private fun setFavorite() {
         if (isFavorite)
@@ -131,58 +136,17 @@ class DetailMatchFragment : Fragment() {
             menuItem?.getItem(0)?.setIcon(R.drawable.ic_add)
     }
 
-    // add favorite
-    private fun insertFavorite() {
-        try {
-            context?.database?.use {
-                insert(
-                    Favorite.TABLE_FAVORITE,
-                    Favorite.ID_EVENT to dataDetail?.idEvent,
-                    Favorite.DATE_EVENT to dataDetail?.dateEvent,
-                    Favorite.TIME_EVENT to dataDetail?.strTime,
-                    Favorite.HOME_TEAM to dataDetail?.strHomeTeam,
-                    Favorite.AWAY_TEAM to dataDetail?.strAwayTeam,
-                    Favorite.HOME_SCORE to dataDetail?.intHomeScore,
-                    Favorite.AWAY_SCORE to dataDetail?.intAwayScore,
-                    Favorite.HOME_GOAL_DETAILS to dataDetail?.strHomeGoalDetails,
-                    Favorite.AWAY_GOAL_DETAILS to dataDetail?.strAwayGoalDetails,
-                    Favorite.HOME_YELLOW_CARDS to dataDetail?.strHomeYellowCards,
-                    Favorite.AWAY_YELLOW_CARDS to dataDetail?.strAwayYellowCards,
-                    Favorite.HOME_RED_CARDS to dataDetail?.strHomeRedCards,
-                    Favorite.AWAY_RED_CARDS to dataDetail?.strAwayRedCards
-                )
-            }
-            Toast.makeText(context, "Add To Favorite", Toast.LENGTH_LONG).show()
-        } catch (e: SQLiteConstraintException) {
-            Log.e(TAG, "addFavorite = ${e.message}")
-        }
-    }
-
-    // remove favorite
-    private fun deleteFavorite(){
-        try {
-            context?.database?.use {
-                delete(
-                    Favorite.TABLE_FAVORITE,
-                    Favorite.ID_EVENT+" ={id}",
-                    "id" to dataDetail?.idEvent.toString()
-
-                )
-            }
-            Toast.makeText(context, "Remove From Favorite", Toast.LENGTH_LONG).show()
-        } catch (e: SQLiteConstraintException) {
-            Log.e(TAG, "removeFavorite = ${e.message}")
-        }
-    }
 
     private fun favoriteState(){
         context?.database?.use {
-            val result = select(Favorite.TABLE_FAVORITE)
-                .whereArgs(Favorite.ID_EVENT+" ={id}",
+            val result = select(Match.TABLE_FAVORITE)
+                .whereArgs(Match.ID_EVENT+" ={id}",
                     "id" to dataDetail?.idEvent.toString())
 
-            val favorite = result.parseList(classParser<Favorite>())
+            val favorite = result.parseList(classParser<Match>())
             if (favorite.isNotEmpty()) isFavorite = true
+
+            setFavorite()
 
         }
         Log.d(TAG, isFavorite.toString())
