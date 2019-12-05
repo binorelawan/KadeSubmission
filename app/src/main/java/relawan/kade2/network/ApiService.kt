@@ -1,7 +1,9 @@
 package relawan.kade2.network
 
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.Deferred
 import relawan.kade2.BuildConfig.BASE_URL
 import relawan.kade2.model.*
 import retrofit2.Call
@@ -18,6 +20,7 @@ private val moshi = Moshi.Builder()
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .addCallAdapterFactory(CoroutineCallAdapterFactory())
     .baseUrl(BASE_URL)
     .build()
 
@@ -26,43 +29,43 @@ interface LeagueApiService {
 
     // get list of League
     @GET("all_leagues.php")
-    fun getLeague():
-            Call<LeagueResponse>
+    fun getLeagueAsync():
+            Deferred<LeagueResponse>
 
 //    lookupleague.php?id={idLeague}
     // get detail of league
     @GET("lookupleague.php")
-    fun getDetailLeague(
+    fun getDetailLeagueAsync(
         @Query("id") idLeague: String):
-            Call<DetailLeagueResponse>
+            Deferred<DetailLeagueResponse>
 
 //    eventspastleague.php?id={idLeague}
     // get Last Match fixture
     @GET("eventspastleague.php")
-    fun getLastMatch(
+    fun getLastMatchAsync(
         @Query("id") idLeague: String):
-            Call<MatchResponse>
+            Deferred<MatchResponse>
 
 //    eventsnextleague.php?id={idLeague}
     // get Next Match fixture
     @GET("eventsnextleague.php")
-    fun getNextMatch(
+    fun getNextMatchAsync(
         @Query("id") idLeague: String):
-            Call<MatchResponse>
+            Deferred<MatchResponse>
 
 //    lookupevent.php?id={idEvent}
     // get Detail match fixture
     @GET("lookupevent.php")
-    fun getDetailMatch(
+    fun getDetailMatchAsync(
         @Query("id") idEvent: String):
-            Call<DetailMatchResponse>
+            Deferred<DetailMatchResponse>
 
 //    searchevents.php?e={query}
     // get Search match fixture
     @GET("searchevents.php")
-    fun getSearch(
+    fun getSearchAsync(
         @Query("e") query: String):
-            Call<SearchResponse?>
+            Deferred<SearchResponse?>
 
 //    lookupteam.php?id={idTeam}
     // get team detail (logo)
@@ -71,6 +74,12 @@ interface LeagueApiService {
         @Query("id") idTeam: String):
             Call<DetailTeamResponse>
 
+//    lookupleague.php?id={idLeague}
+    // get league logo
+    @GET("lookupleague.php")
+    fun getDetailLeague(
+        @Query("id") idLeague: String):
+            Call<DetailLeagueResponse>
 
 }
 

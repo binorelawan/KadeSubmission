@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import relawan.kade2.model.League
-import relawan.kade2.model.LeagueResponse
 import relawan.kade2.network.LeagueApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class HomeViewModel : ViewModel() {
 
@@ -19,6 +19,8 @@ class HomeViewModel : ViewModel() {
         get() = _leagueName
 
 
+    private var viewModelJob = Job()
+    private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main )
 
     init {
         getLeagueList()
@@ -26,17 +28,30 @@ class HomeViewModel : ViewModel() {
 
     private fun getLeagueList() {
 
-        LeagueApi.retrofitService.getLeague().enqueue(object: Callback<LeagueResponse> {
-            override fun onFailure(call: Call<LeagueResponse>, t: Throwable) {
-                Log.d(TAG, t.message!!)
-            }
+        viewModelScope.launch {
+            val getLeagueDeferred = LeagueApi.retrofitService.getLeagueAsync()
 
-            override fun onResponse(call: Call<LeagueResponse>, response: Response<LeagueResponse>) {
-                _leagueName.value = response.body()?.leagues
+            try {
+
+                val listLeague = getLeagueDeferred.await()
+                _leagueName.value = listLeague.leagues
                 Log.d(TAG, "success")
+
+
+            } catch (e: Exception) {
+
+                Log.d(TAG, e.message!!)
+
             }
 
-        })
+
+        }
+
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 
     companion object {

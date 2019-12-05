@@ -4,6 +4,7 @@ package relawan.kade2.view.fixture.search
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -75,18 +76,35 @@ class SearchFragment : Fragment() {
             // filter strSport == "Soccer"
             val filter = list?.filter {search ->
                 search.strSport == "Soccer"
+
             }
 
+            if (list != null) {
+                Log.d(TAG, "list not null: ${list.size}")
 
-            if (list == filter && list != null) {
-                progressBar.visibility = View.GONE
-                matchList.visibility = View.VISIBLE
-                searchAdapter.data = list
+                if (filter != null) {
+                    if (filter.isEmpty()) {
+                        Log.d(TAG, "filter empty: ${filter.size}")
+                        progressBar.visibility = View.GONE
+                        errorText.visibility = View.VISIBLE
+
+                    } else {
+                        Log.d(TAG, "filter not empty: ${filter.size}")
+                        progressBar.visibility = View.GONE
+                        matchList.visibility = View.VISIBLE
+                        searchAdapter.data = filter
+
+                    }
+                }
+
             } else {
+                Log.d(TAG, "list null: ${list?.size}")
                 // when input failed
                 progressBar.visibility = View.GONE
                 errorText.visibility = View.VISIBLE
+
             }
+
 
 
         })
@@ -135,5 +153,9 @@ class SearchFragment : Fragment() {
         // close keyboard after click back up button
         searchView.clearFocus()
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        private val TAG = SearchFragment::class.java.simpleName
     }
 }

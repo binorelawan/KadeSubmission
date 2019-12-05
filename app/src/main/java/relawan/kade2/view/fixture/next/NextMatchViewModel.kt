@@ -5,13 +5,13 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import relawan.kade2.model.League
 import relawan.kade2.model.Match
-import relawan.kade2.model.MatchResponse
 import relawan.kade2.network.LeagueApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class NextMatchViewModel(league : League, application: Application): AndroidViewModel(application) {
 
@@ -25,6 +25,9 @@ class NextMatchViewModel(league : League, application: Application): AndroidView
     val nextMatch: LiveData<List<Match>>
         get() = _nextMatch
 
+    private var viewModelJob = Job()
+    private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main )
+
     init {
         //get _idLeague value from argument(SafeArgs) sent by DetailLeagueFragment
         _idLeague.value = league
@@ -34,19 +37,30 @@ class NextMatchViewModel(league : League, application: Application): AndroidView
 
     private fun getNextMatch() {
 
-        idLeague.value?.idLeague?.let {
-            LeagueApi.retrofitService.getNextMatch(it).enqueue(object : Callback<MatchResponse>{
-                override fun onFailure(call: Call<MatchResponse>, t: Throwable) {
-                    Log.d(TAG, t.message!!)
-                }
+        viewModelScope.launch {
+            val getNextMatchDeferred =
+                idLeague.value?.idLeague?.let { LeagueApi.retrofitService.getNextMatchAsync(it) }
 
-                override fun onResponse(call: Call<MatchResponse>, response: Response<MatchResponse>) {
-                    _nextMatch.value = response.body()?.events
-                    Log.d(TAG, "success")
-                }
+            try {
 
-            })
+                val listNextMatch = getNextMatchDeferred?.await()
+                _nextMatch.value = listNextMatch?.events
+                Log.d(TAG, "success")
+
+
+            } catch (e: Exception) {
+
+                Log.d(TAG, e.message!!)
+
+            }
+
         }
+
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 
     companion object {

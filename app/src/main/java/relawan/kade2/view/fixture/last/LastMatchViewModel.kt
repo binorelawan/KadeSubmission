@@ -5,13 +5,13 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import relawan.kade2.model.League
 import relawan.kade2.model.Match
-import relawan.kade2.model.MatchResponse
 import relawan.kade2.network.LeagueApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class LastMatchViewModel(league : League, application: Application): AndroidViewModel(application) {
 
@@ -25,6 +25,9 @@ class LastMatchViewModel(league : League, application: Application): AndroidView
     val lastMatch: LiveData<List<Match>>
         get() = _lastMatch
 
+    private var viewModelJob = Job()
+    private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main )
+
 
     init {
         //get _idLeague value from argument(SafeArgs) sent by DetailLeagueFragment
@@ -33,21 +36,32 @@ class LastMatchViewModel(league : League, application: Application): AndroidView
         getLastMatch()
     }
 
-    private fun getLastMatch() {
+    fun getLastMatch() {
 
-        idLeague.value?.idLeague?.let {
-            LeagueApi.retrofitService.getLastMatch(it).enqueue(object :Callback<MatchResponse>{
-                override fun onFailure(call: Call<MatchResponse>, t: Throwable) {
-                    Log.d(TAG, t.message!!)
-                }
+        viewModelScope.launch {
+            val getLastMatchDeferred =
+                idLeague.value?.idLeague?.let { LeagueApi.retrofitService.getLastMatchAsync(it) }
 
-                override fun onResponse(call: Call<MatchResponse>, response: Response<MatchResponse>) {
-                    _lastMatch.value = response.body()?.events
-                    Log.d(TAG, "success")
-                }
+            try {
 
-            })
+                val listLastMatch = getLastMatchDeferred?.await()
+                _lastMatch.value = listLastMatch?.events
+                Log.d(TAG, "success")
+
+
+            } catch (e: Exception) {
+
+                Log.d(TAG, e.message!!)
+
+            }
+
         }
+
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 
     companion object {

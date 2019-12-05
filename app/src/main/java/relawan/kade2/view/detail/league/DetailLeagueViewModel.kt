@@ -5,13 +5,13 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import relawan.kade2.model.DetailLeague
-import relawan.kade2.model.DetailLeagueResponse
 import relawan.kade2.model.League
 import relawan.kade2.network.LeagueApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class DetailLeagueViewModel(league : League, application: Application): AndroidViewModel(application) {
 
@@ -25,6 +25,8 @@ class DetailLeagueViewModel(league : League, application: Application): AndroidV
     val detail: LiveData<List<DetailLeague>>
         get() = _detail
 
+    private var viewModelJob = Job()
+    private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main )
 
     init {
         //get _idLeague value from argument(SafeArgs) sent by HomeFragment
@@ -35,21 +37,29 @@ class DetailLeagueViewModel(league : League, application: Application): AndroidV
 
     private fun getDetailLeague() {
 
-        idLeague.value?.idLeague?.let {
-            LeagueApi.retrofitService.getDetailLeague(it).enqueue(object : Callback<DetailLeagueResponse>{
-                override fun onFailure(call: Call<DetailLeagueResponse>, t: Throwable) {
-                    Log.d(TAG, t.message!!)
-                }
+        viewModelScope.launch {
+            val getDetailLeagueDeferred = idLeague.value?.idLeague?.let { LeagueApi.retrofitService.getDetailLeagueAsync(it) }
 
-                override fun onResponse(call: Call<DetailLeagueResponse>, response: Response<DetailLeagueResponse>) {
-                    _detail.value = response.body()?.leagues
-                    Log.d(TAG, "success")
-                }
+            try {
 
-            })
+                val listDetailLeague = getDetailLeagueDeferred?.await()
+                _detail.value = listDetailLeague?.leagues
+                Log.d(TAG, "success")
+
+
+            } catch (e: Exception) {
+
+                Log.d(TAG, e.message!!)
+
+            }
         }
+
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
 
     companion object {
         private val TAG = DetailLeagueViewModel::class.java.simpleName

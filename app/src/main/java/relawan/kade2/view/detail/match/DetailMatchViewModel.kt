@@ -8,17 +8,17 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import relawan.kade2.database.database
 import relawan.kade2.model.DetailMatch
-import relawan.kade2.model.DetailMatchResponse
 import relawan.kade2.model.Match
 import relawan.kade2.model.Search
 import relawan.kade2.network.LeagueApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class DetailMatchViewModel(val context: Context?, detail: Match?, search: Search?, application: Application) : AndroidViewModel(application) {
 
@@ -39,7 +39,8 @@ class DetailMatchViewModel(val context: Context?, detail: Match?, search: Search
         get() = _detail
 
 
-
+    private var viewModelJob = Job()
+    private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main )
 
     init {
         _idDetail.value = detail
@@ -52,19 +53,19 @@ class DetailMatchViewModel(val context: Context?, detail: Match?, search: Search
 
     private fun getDetailMatch() {
 
-        event.value?.let {
-            LeagueApi.retrofitService.getDetailMatch(it).enqueue(object : Callback<DetailMatchResponse>{
-                override fun onFailure(call: Call<DetailMatchResponse>, t: Throwable) {
-                    Log.d(TAG, t.message!!)
-                    Log.d(TAG, event.value!!)
-                }
+        viewModelScope.launch {
+            val getDetailMatchDeferred = event.value?.let { LeagueApi.retrofitService.getDetailMatchAsync(it) }
 
-                override fun onResponse(call: Call<DetailMatchResponse>, response: Response<DetailMatchResponse>) {
-                    _detail.value = response.body()?.events
-                    Log.d(TAG, "${event.value} success")
-                }
+            try {
 
-            })
+                val listDetailMatch = getDetailMatchDeferred?.await()
+                _detail.value = listDetailMatch?.events
+                Log.d(TAG, "success")
+
+            } catch (e: Exception) {
+
+                Log.d(TAG, e.message!!)
+            }
         }
 
 
@@ -113,6 +114,11 @@ class DetailMatchViewModel(val context: Context?, detail: Match?, search: Search
         } catch (e: SQLiteConstraintException) {
             Log.e(TAG, "removeFavorite = ${e.message}")
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 
     companion object {
