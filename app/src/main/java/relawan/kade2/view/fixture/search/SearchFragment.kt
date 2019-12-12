@@ -4,6 +4,7 @@ package relawan.kade2.view.fixture.search
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -18,7 +19,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import relawan.kade2.databinding.FragmentSearchBinding
-import relawan.kade2.model.Search
+import relawan.kade2.utils.EspressoIdlingResource
 
 /**
  * A simple [Fragment] subclass.
@@ -35,9 +36,8 @@ class SearchFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_search, container, false)
 
+        // Inflate the layout for this fragment
         val binding = FragmentSearchBinding.inflate(inflater)
 
         // lifeCycleOwner
@@ -62,35 +62,49 @@ class SearchFragment : Fragment() {
 
 
         initSearch()
+        searchMatch()
 
         setHasOptionsMenu(true)
         return binding.root
     }
 
     // get viewModel and adapter to show list
-    private fun searchMatch(query: String) {
-
-
-        searchViewModel.getSearchMatch(query).observe(this, Observer<List<Search>?> {list ->
+    private fun searchMatch() {
+        EspressoIdlingResource.increment()
+        searchViewModel.search.observe(this, Observer {list ->
             // filter strSport == "Soccer"
             val filter = list?.filter {search ->
                 search.strSport == "Soccer"
+
             }
 
+            if (list != null) {
+                Log.d(TAG, "list not null: ${list.size}")
 
-            if (list == filter && list != null) {
-                progressBar.visibility = View.GONE
-                matchList.visibility = View.VISIBLE
-                searchAdapter.data = list
+                if (filter != null) {
+                    if (filter.isEmpty()) {
+                        Log.d(TAG, "filter empty: ${filter.size}")
+                        progressBar.visibility = View.GONE
+                        errorText.visibility = View.VISIBLE
+
+                    } else {
+                        Log.d(TAG, "filter not empty: ${filter.size}")
+                        progressBar.visibility = View.GONE
+                        matchList.visibility = View.VISIBLE
+                        searchAdapter.data = filter
+
+                    }
+                }
+
             } else {
+                Log.d(TAG, "list null: ${list?.size}")
                 // when input failed
                 progressBar.visibility = View.GONE
                 errorText.visibility = View.VISIBLE
+
             }
-
-
+            EspressoIdlingResource.decrement()
         })
-
     }
 
     // searchView
@@ -110,7 +124,7 @@ class SearchFragment : Fragment() {
 
                 if (query.isNotEmpty()) {
 
-                    searchMatch(query)
+                    searchViewModel.getSearchMatch(query)
                     progressBar.visibility = View.VISIBLE
                     matchList.visibility = View.GONE
                     errorText.visibility = View.GONE
@@ -135,5 +149,9 @@ class SearchFragment : Fragment() {
         // close keyboard after click back up button
         searchView.clearFocus()
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        private val TAG = SearchFragment::class.java.simpleName
     }
 }

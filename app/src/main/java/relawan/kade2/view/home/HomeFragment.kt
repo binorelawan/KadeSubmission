@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import relawan.kade2.R
 import relawan.kade2.databinding.FragmentHomeBinding
+import relawan.kade2.utils.EspressoIdlingResource
 
 /**
  * A simple [Fragment] subclass.
@@ -41,11 +42,13 @@ class HomeFragment : Fragment() {
         binding.leagueList.adapter = adapter
 
         // get viewModel and adapter to show list
+        EspressoIdlingResource.increment()
         homeViewModel.leagueName.observe(this, Observer {
             it?.let {
                 binding.progressBar.visibility = View.GONE
                 adapter.data = it
             }
+            EspressoIdlingResource.decrement()
         })
 
         // enable menu

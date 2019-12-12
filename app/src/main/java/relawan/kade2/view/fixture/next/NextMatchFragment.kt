@@ -24,14 +24,13 @@ class NextMatchFragment : Fragment() {
 
         val binding = FragmentNextMatchBinding.inflate(inflater)
 
-        val application = requireNotNull(activity).application
 
         // lifeCycleOwner
         binding.lifecycleOwner = this
 
         // get arguments
         val league = arguments?.let { NextMatchFragmentArgs.fromBundle(it).league }
-        val viewModelFactory = league?.let { NextMatchModelFactory(it, application) }
+        val viewModelFactory = league?.let { NextMatchModelFactory(it) }
 
         // viewModel
         nextMatchViewModel = ViewModelProviders.of(this, viewModelFactory).get(NextMatchViewModel::class.java)

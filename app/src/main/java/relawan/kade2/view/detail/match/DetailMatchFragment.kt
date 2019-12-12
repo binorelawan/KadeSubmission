@@ -40,7 +40,6 @@ class DetailMatchFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = FragmentDetailMatchBinding.inflate(inflater)
 
-        val application = requireNotNull(activity).application
 
         // lifeCycleOwner
         binding.lifecycleOwner = this
@@ -48,7 +47,7 @@ class DetailMatchFragment : Fragment() {
         // get argument from last/next match fragment or search fragment
         val detail = arguments?.let { DetailMatchFragmentArgs.fromBundle(it).detail }
         val search = arguments?.let { DetailMatchFragmentArgs.fromBundle(it).search }
-        val viewModelFactory = DetailMatchModelFactory(context, detail, search, application)
+        val viewModelFactory = DetailMatchModelFactory(context, detail, search)
 
         // viewModel
         detailMatchViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailMatchViewModel::class.java)
@@ -61,7 +60,7 @@ class DetailMatchFragment : Fragment() {
 
 
         // get viewModel and adapter to show list
-        detailMatchViewModel.detail.observe(this, Observer {
+        detailMatchViewModel.detailMatch.observe(this, Observer {
             it?.let {data ->
 
                 dataDetail = DetailMatch(

@@ -1,71 +1,58 @@
 package relawan.kade2.view.detail.match
 
-import android.app.Application
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import relawan.kade2.database.database
 import relawan.kade2.model.DetailMatch
-import relawan.kade2.model.DetailMatchResponse
 import relawan.kade2.model.Match
 import relawan.kade2.model.Search
-import relawan.kade2.network.LeagueApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import relawan.kade2.repository.DetailMatchRepoCallback
+import relawan.kade2.repository.Repository
 
-class DetailMatchViewModel(val context: Context?, detail: Match?, search: Search?, application: Application) : AndroidViewModel(application) {
-
-    private val _idDetail = MutableLiveData<Match>()
-    private val idDetail: LiveData<Match>
-        get() = _idDetail
-
-    private val _idSearch = MutableLiveData<Search>()
-    private val idSearch: LiveData<Search>
-        get() = _idSearch
+class DetailMatchViewModel(val context: Context?, val detail: Match?, val search: Search?) : ViewModel() {
 
     private val _event = MutableLiveData<String>()
     val event: LiveData<String>
         get() = _event
 
-    private val _detail = MutableLiveData<List<DetailMatch>>()
-    val detail: LiveData<List<DetailMatch>>
-        get() = _detail
+    private val _detailMatch = MutableLiveData<List<DetailMatch>>()
+    val detailMatch: LiveData<List<DetailMatch>>
+        get() = _detailMatch
 
 
+    private val repository = Repository()
 
 
     init {
-        _idDetail.value = detail
-        _idSearch.value = search
 
-        _event.value = idDetail.value?.idEvent ?: idSearch.value?.idEvent
+        _event.value = detail?.idEvent ?: search?.idEvent
 
-        getDetailMatch()
+        getDetailMatch(event.value.toString())
     }
 
-    private fun getDetailMatch() {
+    fun getDetailMatch(idEvent: String) {
 
-        event.value?.let {
-            LeagueApi.retrofitService.getDetailMatch(it).enqueue(object : Callback<DetailMatchResponse>{
-                override fun onFailure(call: Call<DetailMatchResponse>, t: Throwable) {
-                    Log.d(TAG, t.message!!)
-                    Log.d(TAG, event.value!!)
-                }
 
-                override fun onResponse(call: Call<DetailMatchResponse>, response: Response<DetailMatchResponse>) {
-                    _detail.value = response.body()?.events
-                    Log.d(TAG, "${event.value} success")
-                }
+        repository.getDetailMatchRepo(idEvent, object : DetailMatchRepoCallback {
+            override fun onError() {
+                Log.d(TAG, "error")
 
-            })
-        }
+            }
+
+            override fun onSuccess(detailMatch: List<DetailMatch>) {
+
+                _detailMatch.value = detailMatch
+                Log.d(TAG, "Success: ${detailMatch.size}")
+            }
+
+        })
 
 
 

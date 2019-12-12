@@ -25,14 +25,13 @@ class LastMatchFragment : Fragment() {
 
         val binding = FragmentLastMatchBinding.inflate(inflater)
 
-        val application = requireNotNull(activity).application
 
         // lifeCycleOwner
         binding.lifecycleOwner = this
 
         // get arguments
         val league = arguments?.let { LastMatchFragmentArgs.fromBundle(it).league }
-        val viewModelFactory = league?.let { LastMatchModelFactory(it, application) }
+        val viewModelFactory = league?.let { LastMatchModelFactory(it) }
 
         // viewModel
         lastMatchViewModel = ViewModelProviders.of(this, viewModelFactory).get(LastMatchViewModel::class.java)

@@ -1,6 +1,5 @@
 package relawan.kade2.view.detail.match
 
-import android.app.Application
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,13 +9,11 @@ import relawan.kade2.model.Search
 class DetailMatchModelFactory(
     private val context: Context?,
     private val detail: Match?,
-    private val search: Search?,
-    private val application: Application
-) : ViewModelProvider.Factory {
+    private val search: Search?) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DetailMatchViewModel::class.java)) {
-            return DetailMatchViewModel(context, detail, search, application) as T
+            return DetailMatchViewModel(context, detail, search) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

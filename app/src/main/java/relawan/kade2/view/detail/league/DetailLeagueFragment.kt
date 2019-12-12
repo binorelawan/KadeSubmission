@@ -27,14 +27,13 @@ class DetailLeagueFragment : Fragment() {
 
         val binding = FragmentDetailLeagueBinding.inflate(inflater)
 
-        val application = requireNotNull(activity).application
 
         // lifeCycleOwner
         binding.lifecycleOwner = this
 
         // get arguments from HomeFragment
         val league = arguments?.let { DetailLeagueFragmentArgs.fromBundle(it).league }
-        val viewModelFactory = league?.let { DetailLeagueModelFactory(it, application) }
+        val viewModelFactory = league?.let { DetailLeagueModelFactory(it) }
 
         // viewModel
         detailLeagueViewModel = ViewModelProviders.of(this, viewModelFactory).get(

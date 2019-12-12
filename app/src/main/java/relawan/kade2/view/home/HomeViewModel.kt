@@ -5,11 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import relawan.kade2.model.League
-import relawan.kade2.model.LeagueResponse
-import relawan.kade2.network.LeagueApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import relawan.kade2.repository.LeagueRepoCallback
+import relawan.kade2.repository.Repository
 
 class HomeViewModel : ViewModel() {
 
@@ -19,22 +16,26 @@ class HomeViewModel : ViewModel() {
         get() = _leagueName
 
 
+    private val repository = Repository()
 
     init {
         getLeagueList()
     }
 
-    private fun getLeagueList() {
+    fun getLeagueList() {
 
-        LeagueApi.retrofitService.getLeague().enqueue(object: Callback<LeagueResponse> {
-            override fun onFailure(call: Call<LeagueResponse>, t: Throwable) {
-                Log.d(TAG, t.message!!)
+        repository.getLeagueRepo(object : LeagueRepoCallback {
+            override fun onError() {
+                Log.d(TAG, "error")
             }
 
-            override fun onResponse(call: Call<LeagueResponse>, response: Response<LeagueResponse>) {
-                _leagueName.value = response.body()?.leagues
-                Log.d(TAG, "success")
+            override fun onSuccess(league: List<League>) {
+
+                _leagueName.value = league
+                Log.d(TAG, "Success: ${league.size}")
+
             }
+
 
         })
     }
