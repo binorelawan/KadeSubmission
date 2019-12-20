@@ -9,14 +9,13 @@ import relawan.kade2.model.League
 import relawan.kade2.repository.DetailLeagueRepoCallback
 import relawan.kade2.repository.Repository
 
-class DetailLeagueViewModel(val league : League): ViewModel() {
+class DetailLeagueViewModel(val league : League, val repository: Repository): ViewModel() {
 
     // detail league liveData
     private val _detail = MutableLiveData<List<DetailLeague>>()
     val detail: LiveData<List<DetailLeague>>
         get() = _detail
 
-    private val repository = Repository()
 
     init {
 

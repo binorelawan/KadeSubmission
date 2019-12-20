@@ -8,14 +8,13 @@ import relawan.kade2.model.Search
 import relawan.kade2.repository.Repository
 import relawan.kade2.repository.SearchRepoCallback
 
-class SearchViewModel : ViewModel() {
+class SearchViewModel(val repository: Repository) : ViewModel() {
 
     // search liveData
     private val _search = MutableLiveData<List<Search>>()
     val search: LiveData<List<Search>>
         get() = _search
 
-    private val repository = Repository()
 
 
     fun getSearchMatch(query: String): LiveData<List<Search>> {

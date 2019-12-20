@@ -26,7 +26,7 @@ buildscript {
         espressoVersion = '3.2.0'
         androidXTestVersion = '1.1.1'
 
-        idlingResourcVersion = '3.2.0'
+        idlingResourceVersion = '3.2.0'
     }
 
     repositories {

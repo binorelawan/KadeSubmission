@@ -16,7 +16,7 @@ import relawan.kade2.model.Search
 import relawan.kade2.repository.DetailMatchRepoCallback
 import relawan.kade2.repository.Repository
 
-class DetailMatchViewModel(val context: Context?, val detail: Match?, val search: Search?) : ViewModel() {
+class DetailMatchViewModel(val context: Context?, val detail: Match?, val search: Search?, val repository: Repository) : ViewModel() {
 
     private val _event = MutableLiveData<String>()
     val event: LiveData<String>
@@ -27,7 +27,6 @@ class DetailMatchViewModel(val context: Context?, val detail: Match?, val search
         get() = _detailMatch
 
 
-    private val repository = Repository()
 
 
     init {

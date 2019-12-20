@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import relawan.kade2.databinding.FragmentDetailLeagueBinding
-
+import relawan.kade2.repository.Repository
 
 
 /**
@@ -19,6 +19,8 @@ import relawan.kade2.databinding.FragmentDetailLeagueBinding
 class DetailLeagueFragment : Fragment() {
 
     private lateinit var detailLeagueViewModel: DetailLeagueViewModel
+
+    private val repository = Repository()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +35,7 @@ class DetailLeagueFragment : Fragment() {
 
         // get arguments from HomeFragment
         val league = arguments?.let { DetailLeagueFragmentArgs.fromBundle(it).league }
-        val viewModelFactory = league?.let { DetailLeagueModelFactory(it) }
+        val viewModelFactory = league?.let { DetailLeagueModelFactory(it, repository) }
 
         // viewModel
         detailLeagueViewModel = ViewModelProviders.of(this, viewModelFactory).get(

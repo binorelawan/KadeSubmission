@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import relawan.kade2.databinding.FragmentLastMatchBinding
+import relawan.kade2.repository.Repository
 
 /**
  * A simple [Fragment] subclass.
@@ -17,6 +18,8 @@ import relawan.kade2.databinding.FragmentLastMatchBinding
 class LastMatchFragment : Fragment() {
 
     private lateinit var lastMatchViewModel: LastMatchViewModel
+
+    private val repository = Repository()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +34,7 @@ class LastMatchFragment : Fragment() {
 
         // get arguments
         val league = arguments?.let { LastMatchFragmentArgs.fromBundle(it).league }
-        val viewModelFactory = league?.let { LastMatchModelFactory(it) }
+        val viewModelFactory = league?.let { LastMatchModelFactory(it, repository) }
 
         // viewModel
         lastMatchViewModel = ViewModelProviders.of(this, viewModelFactory).get(LastMatchViewModel::class.java)

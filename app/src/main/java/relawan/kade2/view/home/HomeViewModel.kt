@@ -8,7 +8,7 @@ import relawan.kade2.model.League
 import relawan.kade2.repository.LeagueRepoCallback
 import relawan.kade2.repository.Repository
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(val repository: Repository) : ViewModel() {
 
     // league liveData
     private val _leagueName = MutableLiveData<List<League>>()
@@ -16,7 +16,6 @@ class HomeViewModel : ViewModel() {
         get() = _leagueName
 
 
-    private val repository = Repository()
 
     init {
         getLeagueList()

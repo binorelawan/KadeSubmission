@@ -9,7 +9,7 @@ import relawan.kade2.model.Match
 import relawan.kade2.repository.MatchRepoCallback
 import relawan.kade2.repository.Repository
 
-class LastMatchViewModel(val league : League): ViewModel() {
+class LastMatchViewModel(val league : League, val repository: Repository): ViewModel() {
 
     // last match liveData
     private val _lastMatch = MutableLiveData<List<Match>>()
@@ -17,7 +17,6 @@ class LastMatchViewModel(val league : League): ViewModel() {
         get() = _lastMatch
 
 
-    private val repository = Repository()
 
     init {
 

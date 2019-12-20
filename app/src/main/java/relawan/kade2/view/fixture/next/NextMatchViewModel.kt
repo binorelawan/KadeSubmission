@@ -9,14 +9,13 @@ import relawan.kade2.model.Match
 import relawan.kade2.repository.MatchRepoCallback
 import relawan.kade2.repository.Repository
 
-class NextMatchViewModel(val league : League): ViewModel() {
+class NextMatchViewModel(val league : League, val repository: Repository): ViewModel() {
 
     // next match liveData
     private val _nextMatch = MutableLiveData<List<Match>>()
     val nextMatch: LiveData<List<Match>>
         get() = _nextMatch
 
-    private val repository = Repository()
 
     init {
 

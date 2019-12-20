@@ -1,7 +1,6 @@
 package relawan.kade2.view.detail.match
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import org.apache.maven.model.Repository
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.Before
@@ -10,6 +9,7 @@ import org.junit.Test
 import relawan.kade2.getOrAwaitValue
 import relawan.kade2.model.Match
 import relawan.kade2.model.Search
+import relawan.kade2.repository.Repository
 
 class DetailMatchViewModelTest {
 
@@ -42,7 +42,7 @@ class DetailMatchViewModelTest {
          */
         search = null
 
-        detailMatchViewModel = DetailMatchViewModel(context = null, detail = detail, search = null)
+        detailMatchViewModel = DetailMatchViewModel(context = null, detail = detail, search = null, repository = repository)
 
     }
 

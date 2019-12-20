@@ -14,6 +14,7 @@ import relawan.kade2.database.database
 import relawan.kade2.databinding.FragmentDetailMatchBinding
 import relawan.kade2.model.DetailMatch
 import relawan.kade2.model.Match
+import relawan.kade2.repository.Repository
 
 /**
  * A simple [Fragment] subclass.
@@ -29,6 +30,8 @@ class DetailMatchFragment : Fragment() {
 
 
     private lateinit var detailMatchViewModel: DetailMatchViewModel
+
+    private val repository = Repository()
 
     companion object {
         private val TAG = DetailMatchFragment::class.java.simpleName
@@ -47,7 +50,7 @@ class DetailMatchFragment : Fragment() {
         // get argument from last/next match fragment or search fragment
         val detail = arguments?.let { DetailMatchFragmentArgs.fromBundle(it).detail }
         val search = arguments?.let { DetailMatchFragmentArgs.fromBundle(it).search }
-        val viewModelFactory = DetailMatchModelFactory(context, detail, search)
+        val viewModelFactory = DetailMatchModelFactory(context, detail, search, repository)
 
         // viewModel
         detailMatchViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailMatchViewModel::class.java)

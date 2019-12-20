@@ -1,13 +1,13 @@
 package relawan.kade2.view.fixture.search
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import org.apache.maven.model.Repository
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import relawan.kade2.getOrAwaitValue
+import relawan.kade2.repository.Repository
 
 class SearchViewModelTest {
 
@@ -23,7 +23,7 @@ class SearchViewModelTest {
 
         repository = Repository()
 
-        searchViewModel = SearchViewModel()
+        searchViewModel = SearchViewModel(repository)
     }
 
     @Test

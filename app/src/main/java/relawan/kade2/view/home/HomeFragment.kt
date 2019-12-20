@@ -10,7 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import relawan.kade2.R
 import relawan.kade2.databinding.FragmentHomeBinding
-import relawan.kade2.utils.EspressoIdlingResource
+import relawan.kade2.repository.Repository
 
 /**
  * A simple [Fragment] subclass.
@@ -18,6 +18,8 @@ import relawan.kade2.utils.EspressoIdlingResource
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
+
+    private val repository = Repository()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,8 +31,10 @@ class HomeFragment : Fragment() {
         // lifeCycleOwner
         binding.lifecycleOwner = this
 
+        val viewModelFactory = HomeModelFactory(repository)
+
         // viewModel
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
 
 
         // adapter
@@ -42,13 +46,11 @@ class HomeFragment : Fragment() {
         binding.leagueList.adapter = adapter
 
         // get viewModel and adapter to show list
-        EspressoIdlingResource.increment()
         homeViewModel.leagueName.observe(this, Observer {
             it?.let {
                 binding.progressBar.visibility = View.GONE
                 adapter.data = it
             }
-            EspressoIdlingResource.decrement()
         })
 
         // enable menu

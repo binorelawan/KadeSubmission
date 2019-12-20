@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import relawan.kade2.model.*
 import relawan.kade2.network.LeagueApi
 import relawan.kade2.network.LeagueApiService
+import relawan.kade2.utils.EspressoIdlingResource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,6 +15,7 @@ class Repository {
 
     // get Soccer League List
     fun getLeagueRepo(callback: LeagueRepoCallback): MutableLiveData<List<League>> {
+        EspressoIdlingResource.increment()
         val leagueList = MutableLiveData<List<League>>()
         val call = leagueApiService.getLeague()
         call.enqueue(object : Callback<LeagueResponse> {
@@ -31,7 +33,7 @@ class Repository {
                 } else {
                     callback.onError()
                 }
-
+                EspressoIdlingResource.decrement()
             }
         })
 
@@ -149,6 +151,7 @@ class Repository {
 
     // get Search Match
     fun getSearchMatchRepo(query: String, callback: SearchRepoCallback): MutableLiveData<List<Search>> {
+        EspressoIdlingResource.increment()
         val searchList = MutableLiveData<List<Search>>()
         val call = leagueApiService.getSearch(query)
         call.enqueue(object : Callback<SearchResponse?> {
@@ -167,7 +170,7 @@ class Repository {
                 } else {
                     callback.onError()
                 }
-
+                EspressoIdlingResource.decrement()
             }
 
         })

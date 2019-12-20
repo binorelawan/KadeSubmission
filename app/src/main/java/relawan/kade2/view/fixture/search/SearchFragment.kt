@@ -19,19 +19,21 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import relawan.kade2.databinding.FragmentSearchBinding
-import relawan.kade2.utils.EspressoIdlingResource
+import relawan.kade2.repository.Repository
 
 /**
  * A simple [Fragment] subclass.
  */
 class SearchFragment : Fragment() {
 
-    lateinit var searchView: SearchView
-    lateinit var progressBar: ProgressBar
-    lateinit var matchList: RecyclerView
-    lateinit var errorText: TextView
+    private lateinit var searchView: SearchView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var matchList: RecyclerView
+    private lateinit var errorText: TextView
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var searchAdapter: SearchAdapter
+
+    private val repository = Repository()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,8 +51,10 @@ class SearchFragment : Fragment() {
         matchList = binding.matchList
         errorText = binding.errorText
 
+        val viewModelFactory = SearchModelFactory(repository)
+
         // viewModel
-        searchViewModel = ViewModelProviders.of(this).get(SearchViewModel::class.java)
+        searchViewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchViewModel::class.java)
 
         // adapter
         searchAdapter = SearchAdapter(SearchAdapter.OnClickListener{
@@ -70,7 +74,7 @@ class SearchFragment : Fragment() {
 
     // get viewModel and adapter to show list
     private fun searchMatch() {
-        EspressoIdlingResource.increment()
+
         searchViewModel.search.observe(this, Observer {list ->
             // filter strSport == "Soccer"
             val filter = list?.filter {search ->
@@ -103,7 +107,7 @@ class SearchFragment : Fragment() {
                 errorText.visibility = View.VISIBLE
 
             }
-            EspressoIdlingResource.decrement()
+
         })
     }
 

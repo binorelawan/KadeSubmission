@@ -26,7 +26,7 @@ class HomeViewModelTest {
         repository = Repository()
 
 
-        homeViewModel = HomeViewModel()
+        homeViewModel = HomeViewModel(repository)
     }
 
     @Test
