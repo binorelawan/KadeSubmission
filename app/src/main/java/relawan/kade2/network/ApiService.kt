@@ -71,7 +71,19 @@ interface LeagueApiService {
         @Query("id") idTeam: String):
             Call<DetailTeamResponse>
 
+//    lookuptable.php?l={idLeague}
+    // get league tables
+    @GET("lookuptable.php")
+    fun getTable(
+        @Query("l") idLeague: String):
+            Call<TableResponse>
 
+//    lookup_all_teams.php?id={idLeague}
+    // get league teams
+    @GET("lookup_all_teams.php")
+    fun getTeams(
+        @Query("id") idLeague: String):
+            Call<TeamsResponse>
 }
 
 object LeagueApi {

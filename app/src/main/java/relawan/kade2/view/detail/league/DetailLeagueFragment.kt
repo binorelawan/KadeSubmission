@@ -42,35 +42,53 @@ class DetailLeagueFragment : Fragment() {
             DetailLeagueViewModel::class.java)
 
         // adapter
-        val adapter = DetailLeagueAdapter()
-        binding.leagueDetail.adapter = adapter
+        val leagueAdapter = DetailLeagueAdapter()
+        binding.leagueDetail.adapter = leagueAdapter
 
         // get viewModel and adapter to show list
         detailLeagueViewModel.detail.observe(this, Observer {
             it?.let {
-                binding.progressBar.visibility = View.GONE
+                binding.progressBarDetail.visibility = View.GONE
                 binding.leagueDetail.visibility = View.VISIBLE
-                adapter.data = it
+                binding.leagueDetail.isNestedScrollingEnabled = false
+                leagueAdapter.data = it
+            }
+        })
+
+        // TODO: KADE 5 Table Adapter
+        val tableAdapter = TableAdapter()
+        binding.leagueTable.adapter = tableAdapter
+
+        detailLeagueViewModel.table.observe(this, Observer {
+            it?.let {
+                binding.progressBarTable.visibility = View.GONE
+                binding.leagueTable.visibility = View.VISIBLE
+                binding.leagueTable.isNestedScrollingEnabled = false
+                tableAdapter.data = it
             }
         })
 
 
         binding.lastMatch.setOnClickListener {view ->
-            league?.let {
+            league?.let {league ->
                 // navigate to lastMatchFragment with argument
-                DetailLeagueFragmentDirections.actionDetailLeagueFragmentToLastMatchFragment(
-                    it
-                )
+                DetailLeagueFragmentDirections.actionDetailLeagueFragmentToLastMatchFragment(league)
             }?.let { view.findNavController().navigate(it) }
 
         }
 
         binding.nextMatch.setOnClickListener {view ->
-            league?.let {
+            league?.let {league ->
                 // navigate to nextMatchFragment with argument
-                DetailLeagueFragmentDirections.actionDetailLeagueFragmentToNextMatchFragment(
-                    it
-                )
+                DetailLeagueFragmentDirections.actionDetailLeagueFragmentToNextMatchFragment(league)
+            }?.let { view.findNavController().navigate(it) }
+
+        }
+
+        binding.leagueTeams.setOnClickListener {view ->
+            league?.let {league ->
+                // navigate to teamsFragment with argument
+                DetailLeagueFragmentDirections.actionDetailLeagueFragmentToTeamsFragment(league)
             }?.let { view.findNavController().navigate(it) }
 
         }

@@ -35,6 +35,10 @@
         <action
             android:id="@+id/action_detailLeagueFragment_to_lastMatchFragment"
             app:destination="@id/lastMatchFragment" />
+
+        <action
+            android:id="@+id/action_detailLeagueFragment_to_teamsFragment"
+            app:destination="@id/teamsFragment" />
     </fragment>
 
     <fragment
@@ -61,6 +65,16 @@
         <action
             android:id="@+id/action_lastMatchFragment_to_detailMatchFragment"
             app:destination="@id/detailMatchFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/teamsFragment"
+        android:name="relawan.kade2.view.fixture.teams.TeamsFragment"
+        android:label="TeamsFragment" >
+        <argument
+            android:name="league"
+            app:argType="relawan.kade2.model.League"/>
+
     </fragment>
 
     <fragment
@@ -97,4 +111,6 @@
             android:id="@+id/action_favoriteFragment_to_detailMatchFragment"
             app:destination="@id/detailMatchFragment" />
     </fragment>
+
+
 </navigation>

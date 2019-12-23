@@ -37,7 +37,6 @@ class DetailLeagueAdapter : RecyclerView.Adapter<DetailLeagueAdapter.ViewHolder>
         fun bind(item: DetailLeague) {
             binding.titleDetail.text = item.strLeague
             binding.countryDetail.text = item.strCountry
-            binding.descriptionDetail.text = item.strDescriptionEN
             binding.logoDetail.let {view ->
                 Glide.with(view.context).load(item.strLogo).into(binding.logoDetail)
             }

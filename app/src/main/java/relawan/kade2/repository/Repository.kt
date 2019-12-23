@@ -178,6 +178,61 @@ class Repository {
         return searchList
     }
 
+    // TODO: KADE 5 table call API repo
+    // get Table League
+    fun getTableLeagueRepo(idLeague: String, callback: TableLeagueRepoCallback): MutableLiveData<List<Table>> {
+        val tableList = MutableLiveData<List<Table>>()
+        val call = leagueApiService.getTable(idLeague)
+        call.enqueue(object : Callback<TableResponse> {
+            override fun onFailure(call: Call<TableResponse>, t: Throwable) {
+                callback.onError()
+            }
+
+            override fun onResponse(call: Call<TableResponse>, response: Response<TableResponse>) {
+
+                if (response.isSuccessful) {
+                    val result = response.body()?.table
+                    result?.let {
+                        callback.onSuccess(it)
+                    } ?: callback.onError()
+                } else {
+                    callback.onError()
+                }
+            }
+
+        })
+
+        return tableList
+    }
+
+    // TODO: KADE 5 teams call API repo
+    // get Teams
+    fun getTeamsRepo(idLeague: String, callback: TeamsRepoCallback): MutableLiveData<List<Teams>> {
+        val teamList = MutableLiveData<List<Teams>>()
+        val call = leagueApiService.getTeams(idLeague)
+        call.enqueue(object :Callback<TeamsResponse> {
+            override fun onFailure(call: Call<TeamsResponse>, t: Throwable) {
+                callback.onError()
+            }
+
+            override fun onResponse(call: Call<TeamsResponse>, response: Response<TeamsResponse>) {
+
+                if (response.isSuccessful) {
+                    val result = response.body()?.teams
+                    result?.let {
+                        callback.onSuccess(it)
+                    } ?: callback.onError()
+                } else {
+                    callback.onError()
+                }
+            }
+
+        })
+
+        return teamList
+    }
+
+
 }
 
 interface LeagueRepoCallback {
@@ -203,4 +258,14 @@ interface DetailMatchRepoCallback {
 interface SearchRepoCallback {
     fun onError()
     fun onSuccess(search: List<Search>)
+}
+
+interface TableLeagueRepoCallback {
+    fun onError()
+    fun onSuccess(table: List<Table>)
+}
+
+interface TeamsRepoCallback {
+    fun onError()
+    fun onSuccess(teams: List<Teams>)
 }

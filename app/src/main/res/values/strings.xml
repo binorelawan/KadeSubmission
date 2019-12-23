@@ -10,6 +10,7 @@
 
     <string name="strip">-</string>
 
+    <!--search fragment-->
     <string name="search">Search</string>
     <string name="team_can_t_be_found">Team Can\'t Be Found !!!</string>
     <string name="enter_team_name">Enter Team Name !!</string>
@@ -23,9 +24,23 @@
     <string name="search_team_fragment">Search Football Team</string>
     <string name="favorite_match_fragment">Favorite Match</string>
 
+    <!--home fragment-->
     <string name="logo_league">logo league</string>
     <string name="home">Home</string>
+
+    <!--favorite fragment-->
     <string name="favorite">Favorite</string>
     <string name="favorites_button">Favorites Button</string>
+
+    <!-- table league fragment -->
+    <string name="rank">#</string>
+    <string name="table_league">Table League</string>
+    <string name="play">P</string>
+    <string name="goal_diff">GD</string>
+    <string name="point">Point</string>
+
+    <!--teams fragment-->
+    <string name="logo_teams">logo teams</string>
+    <string name="league_teams">League Teams</string>
 
 </resources>
