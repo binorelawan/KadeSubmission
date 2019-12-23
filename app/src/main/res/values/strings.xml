@@ -43,4 +43,9 @@
     <string name="logo_teams">logo teams</string>
     <string name="league_teams">League Teams</string>
 
+
+    <string name="year_text">Formed Year :</string>
+    <string name="country_text">Country :</string>
+    <string name="stadium_text">Stadium :</string>
+
 </resources>

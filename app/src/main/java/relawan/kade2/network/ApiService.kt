@@ -64,13 +64,6 @@ interface LeagueApiService {
         @Query("e") query: String):
             Call<SearchResponse?>
 
-//    lookupteam.php?id={idTeam}
-    // get team detail (logo)
-    @GET("lookupteam.php")
-    fun getTeam(
-        @Query("id") idTeam: String):
-            Call<DetailTeamResponse>
-
 //    lookuptable.php?l={idLeague}
     // get league tables
     @GET("lookuptable.php")
@@ -84,6 +77,13 @@ interface LeagueApiService {
     fun getTeams(
         @Query("id") idLeague: String):
             Call<TeamsResponse>
+
+    //    lookupteam.php?id={idTeam}
+    // get team detail
+    @GET("lookupteam.php")
+    fun getDetailTeam(
+        @Query("id") idTeam: String):
+            Call<DetailTeamResponse>
 }
 
 object LeagueApi {

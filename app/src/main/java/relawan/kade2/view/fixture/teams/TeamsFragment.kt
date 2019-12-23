@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import relawan.kade2.R
 import relawan.kade2.databinding.FragmentTeamsBinding
 import relawan.kade2.repository.Repository
@@ -39,8 +40,9 @@ class TeamsFragment : Fragment() {
 
         // adapter
         val adapter = TeamsAdapter(TeamsAdapter.OnClickListener {
-
-            Toast.makeText(context, "${it.idTeam}", Toast.LENGTH_LONG).show()
+            // navigate to detailTeamFragment with argument
+            val action = TeamsFragmentDirections.actionTeamsFragmentToDetailTeamFragment(it)
+            findNavController().navigate(action)
         })
         binding.teamsList.adapter = adapter
 

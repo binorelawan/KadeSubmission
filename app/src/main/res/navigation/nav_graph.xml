@@ -74,7 +74,20 @@
         <argument
             android:name="league"
             app:argType="relawan.kade2.model.League"/>
+        <action
+            android:id="@+id/action_teamsFragment_to_detailTeamFragment"
+            app:destination="@id/detailTeamFragment" />
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailTeamFragment"
+        android:name="relawan.kade2.view.detail.team.DetailTeamFragment"
+        android:label="fragment_detail_team"
+        tools:layout="@layout/fragment_detail_team">
+        <argument
+            android:name="teams"
+            app:argType="relawan.kade2.model.Teams"/>
     </fragment>
 
     <fragment
@@ -111,6 +124,7 @@
             android:id="@+id/action_favoriteFragment_to_detailMatchFragment"
             app:destination="@id/detailMatchFragment" />
     </fragment>
+
 
 
 </navigation>

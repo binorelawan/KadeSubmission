@@ -232,6 +232,33 @@ class Repository {
         return teamList
     }
 
+    // TODO: KADE 5 detail team call API repo
+    // get detail team
+    fun getDetailTeamRepo(idTeam: String, callback: DetailTeamRepoCallback): MutableLiveData<List<DetailTeam>> {
+        val detailTeamList = MutableLiveData<List<DetailTeam>>()
+        val call = leagueApiService.getDetailTeam(idTeam)
+        call.enqueue(object :Callback<DetailTeamResponse> {
+            override fun onFailure(call: Call<DetailTeamResponse>, t: Throwable) {
+                callback.onError()
+            }
+
+            override fun onResponse(call: Call<DetailTeamResponse>, response: Response<DetailTeamResponse>) {
+
+                if (response.isSuccessful) {
+                    val result = response.body()?.teams
+                    result?.let {
+                        callback.onSuccess(it)
+                    } ?: callback.onError()
+                } else {
+                    callback.onError()
+                }
+            }
+
+        })
+
+        return detailTeamList
+    }
+
 
 }
 
@@ -268,4 +295,9 @@ interface TableLeagueRepoCallback {
 interface TeamsRepoCallback {
     fun onError()
     fun onSuccess(teams: List<Teams>)
+}
+
+interface DetailTeamRepoCallback {
+    fun onError()
+    fun onSuccess(detailTeam: List<DetailTeam>)
 }
