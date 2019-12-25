@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".view.fixture.search.SearchFragment">
+        tools:context=".view.fixture.search.match.SearchMatchFragment">
 
 
         <com.google.android.material.appbar.AppBarLayout
@@ -64,13 +64,13 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:itemCount="16"
-                tools:listitem="@layout/list_search" />
+                tools:listitem="@layout/list_search_match" />
 
             <TextView
                 android:id="@+id/error_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/team_can_t_be_found"
+                android:text="@string/match_can_t_be_found"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

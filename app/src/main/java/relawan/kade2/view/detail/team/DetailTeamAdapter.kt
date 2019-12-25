@@ -45,9 +45,8 @@ class DetailTeamAdapter : RecyclerView.Adapter<DetailTeamAdapter.ViewHolder>() {
             binding.bannerTeam.let { view->
                 Glide.with(view.context).load(item.strTeamBanner).into(binding.bannerTeam)
             }
-            binding.badgeTeam.let { view ->
-                Glide.with(view.context).load(item.strTeamBadge).into(binding.badgeTeam)
-            }
+            if (item.strTeamBadge == "" || item.strTeamBadge == null) binding.badgeTeam.setImageResource(R.drawable.no_image)
+                else binding.badgeTeam.let { Glide.with(it.context).load(item.strTeamBadge).into(binding.badgeTeam) }
 
             binding.executePendingBindings()
         }

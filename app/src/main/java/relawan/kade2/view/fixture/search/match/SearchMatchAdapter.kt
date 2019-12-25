@@ -1,23 +1,25 @@
-package relawan.kade2.view.fixture.search
+package relawan.kade2.view.fixture.search.match
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import relawan.kade2.R
-import relawan.kade2.databinding.ListSearchBinding
-import relawan.kade2.model.Search
+import relawan.kade2.databinding.ListSearchMatchBinding
+import relawan.kade2.model.SearchMatch
 import relawan.kade2.utils.DateTime
 
-class SearchAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+class SearchMatchAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<SearchMatchAdapter.ViewHolder>() {
 
-    var data = listOf<Search>()
+    var data = listOf<SearchMatch>()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+        return ViewHolder.from(
+            parent
+        )
     }
 
     override fun getItemCount(): Int {
@@ -32,11 +34,11 @@ class SearchAdapter(private val onClickListener: OnClickListener) : RecyclerView
         holder.bind(item)
     }
 
-    class ViewHolder(val binding: ListSearchBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: ListSearchMatchBinding) : RecyclerView.ViewHolder(binding.root) {
 
         private val strip = itemView.resources.getString(R.string.strip)
 
-        fun bind(item: Search) {
+        fun bind(item: SearchMatch) {
             val date = DateTime.getDate("${item.dateEvent} ${item.strTime}")
             binding.dateFixture.text = date.substringBeforeLast(";")
             binding.teamHome.text = item.strHomeTeam
@@ -52,13 +54,13 @@ class SearchAdapter(private val onClickListener: OnClickListener) : RecyclerView
             fun from (parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
 
-                val binding = ListSearchBinding.inflate(layoutInflater, parent, false)
+                val binding = ListSearchMatchBinding.inflate(layoutInflater, parent, false)
                 return ViewHolder(binding)
             }
         }
     }
 
-    class OnClickListener(val clickListener: (searchMatch: Search) -> Unit) {
-        fun onClick(searchMatch: Search) = clickListener(searchMatch)
+    class OnClickListener(val clickListener: (searchMatch: SearchMatch) -> Unit) {
+        fun onClick(searchMatch: SearchMatch) = clickListener(searchMatch)
     }
 }

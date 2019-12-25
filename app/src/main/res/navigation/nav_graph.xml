@@ -15,7 +15,7 @@
             app:destination="@id/detailLeagueFragment" />
         <action
             android:id="@+id/action_home_to_searchFragment"
-            app:destination="@id/searchFragment" />
+            app:destination="@id/searchMatchFragment" />
 
     </fragment>
 
@@ -81,6 +81,9 @@
         <action
             android:id="@+id/action_teamsFragment_to_detailTeamFragment"
             app:destination="@id/detailTeamFragment" />
+        <action
+            android:id="@+id/action_teamsFragment_to_searchTeamFragment"
+            app:destination="@id/searchTeamFragment" />
 
     </fragment>
 
@@ -92,7 +95,12 @@
         tools:layout="@layout/fragment_detail_team">
         <argument
             android:name="teams"
-            app:argType="relawan.kade2.model.Teams"/>
+            app:argType="relawan.kade2.model.Teams"
+            app:nullable="true"/>
+        <argument
+            android:name="search"
+            app:argType="relawan.kade2.model.SearchTeam"
+            app:nullable="true"/>
     </fragment>
 
     <fragment
@@ -106,18 +114,28 @@
             app:nullable="true"/>
         <argument
             android:name="search"
-            app:argType="relawan.kade2.model.Search"
+            app:argType="relawan.kade2.model.SearchMatch"
             app:nullable="true"/>
     </fragment>
 
 
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="relawan.kade2.view.fixture.search.SearchFragment"
+        android:id="@+id/searchMatchFragment"
+        android:name="relawan.kade2.view.fixture.search.match.SearchMatchFragment"
+        android:label="@string/search_match_fragment" >
+        <action
+            android:id="@+id/action_searchMatchFragment_to_detailMatchFragment"
+            app:destination="@id/detailMatchFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/searchTeamFragment"
+        android:name="relawan.kade2.view.fixture.search.team.SearchTeamFragment"
         android:label="@string/search_team_fragment" >
         <action
-            android:id="@+id/action_searchFragment_to_detailMatchFragment"
-            app:destination="@id/detailMatchFragment" />
+            android:id="@+id/action_searchTeamFragment_to_detailTeamFragment"
+            app:destination="@id/detailTeamFragment" />
     </fragment>
 
 
@@ -142,6 +160,7 @@
             android:id="@+id/action_favoriteTeamFragment_to_detailTeamFragment"
             app:destination="@id/detailTeamFragment" />
     </fragment>
+
 
 
 </navigation>

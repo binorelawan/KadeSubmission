@@ -40,7 +40,7 @@ class FavoriteTeamFragment : Fragment() {
 
         mAdapter = FavoriteTeamAdapter(favorites, FavoriteTeamAdapter.OnClickListener {
 
-            val action = FavoriteTeamFragmentDirections.actionFavoriteTeamFragmentToDetailTeamFragment(it)
+            val action = FavoriteTeamFragmentDirections.actionFavoriteTeamFragmentToDetailTeamFragment(it, null)
             findNavController().navigate(action)
         })
 

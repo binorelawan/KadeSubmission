@@ -45,7 +45,8 @@ class DetailTeamFragment : Fragment() {
 
         // get argument from TeamsFragment
         val teams = arguments?.let { DetailTeamFragmentArgs.fromBundle(it).teams }
-        val viewModelFactory = teams?.let { DetailTeamModelFactory(context, it, repository) }
+        val search = arguments?.let { DetailTeamFragmentArgs.fromBundle(it).search }
+        val viewModelFactory = DetailTeamModelFactory(context, teams, search, repository)
 
         // viewModel
         detailTeamViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailTeamViewModel::class.java)

@@ -1,4 +1,4 @@
-package relawan.kade2.view.fixture.search
+package relawan.kade2.view.fixture.search.team
 
 
 import android.app.SearchManager
@@ -18,20 +18,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import relawan.kade2.databinding.FragmentSearchBinding
+import relawan.kade2.databinding.FragmentSearchTeamBinding
 import relawan.kade2.repository.Repository
 
 /**
  * A simple [Fragment] subclass.
  */
-class SearchFragment : Fragment() {
+class SearchTeamFragment : Fragment() {
 
     private lateinit var searchView: SearchView
     private lateinit var progressBar: ProgressBar
-    private lateinit var matchList: RecyclerView
+    private lateinit var teamList: RecyclerView
     private lateinit var errorText: TextView
-    private lateinit var searchViewModel: SearchViewModel
-    private lateinit var searchAdapter: SearchAdapter
+    private lateinit var searchTeamViewModel: SearchTeamViewModel
+    private lateinit var searchTeamAdapter: SearchTeamAdapter
 
     private val repository = Repository()
 
@@ -40,46 +40,46 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?): View? {
 
         // Inflate the layout for this fragment
-        val binding = FragmentSearchBinding.inflate(inflater)
+        val binding = FragmentSearchTeamBinding.inflate(inflater)
 
         // lifeCycleOwner
         binding.lifecycleOwner = this
 
         // init searchView, progressBar, recyclerView, textView
-        searchView = binding.searchMatch
+        searchView = binding.searchTeam
         progressBar = binding.progressBar
-        matchList = binding.matchList
+        teamList = binding.teamList
         errorText = binding.errorText
 
-        val viewModelFactory = SearchModelFactory(repository)
+        val viewModelFactory = SearchTeamModelFactory(repository)
 
         // viewModel
-        searchViewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchViewModel::class.java)
+        searchTeamViewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchTeamViewModel::class.java)
 
         // adapter
-        searchAdapter = SearchAdapter(SearchAdapter.OnClickListener{
-            // navigate to detailMatchFragment with argument
-            val action = SearchFragmentDirections.actionSearchFragmentToDetailMatchFragment(null, it)
+        searchTeamAdapter = SearchTeamAdapter(SearchTeamAdapter.OnClickListener {
+            // navigate to detailTeamFragment with argument
+            val action = SearchTeamFragmentDirections.actionSearchTeamFragmentToDetailTeamFragment(null, it)
             findNavController().navigate(action)
+            // close keyboard after click enter
+            searchView.clearFocus()
         })
-        matchList.adapter = searchAdapter
-
+        teamList.adapter = searchTeamAdapter
 
         initSearch()
-        searchMatch()
+        searchTeam()
 
         setHasOptionsMenu(true)
         return binding.root
     }
 
     // get viewModel and adapter to show list
-    private fun searchMatch() {
+    private fun searchTeam() {
 
-        searchViewModel.search.observe(this, Observer {list ->
+        searchTeamViewModel.search.observe(this, Observer { list ->
             // filter strSport == "Soccer"
-            val filter = list?.filter {search ->
+            val filter = list?.filter { search ->
                 search.strSport == "Soccer"
-
             }
 
             if (list != null) {
@@ -94,8 +94,8 @@ class SearchFragment : Fragment() {
                     } else {
                         Log.d(TAG, "filter not empty: ${filter.size}")
                         progressBar.visibility = View.GONE
-                        matchList.visibility = View.VISIBLE
-                        searchAdapter.data = filter
+                        teamList.visibility = View.VISIBLE
+                        searchTeamAdapter.data = filter
 
                     }
                 }
@@ -105,9 +105,7 @@ class SearchFragment : Fragment() {
                 // when input failed
                 progressBar.visibility = View.GONE
                 errorText.visibility = View.VISIBLE
-
             }
-
         })
     }
 
@@ -115,7 +113,7 @@ class SearchFragment : Fragment() {
     private fun initSearch() {
 
         val searchManager = this.context?.getSystemService(Context.SEARCH_SERVICE) as SearchManager?
-        searchView.setSearchableInfo(searchManager!!.getSearchableInfo(activity?.componentName))
+        searchView.setSearchableInfo(searchManager?.getSearchableInfo(activity?.componentName))
 
         // activate keyboard
         searchView.onActionViewExpanded()
@@ -128,23 +126,22 @@ class SearchFragment : Fragment() {
 
                 if (query.isNotEmpty()) {
 
-                    searchViewModel.getSearchMatch(query)
+                    searchTeamViewModel.getSearchTeam(query)
                     progressBar.visibility = View.VISIBLE
-                    matchList.visibility = View.GONE
+                    teamList.visibility = View.GONE
                     errorText.visibility = View.GONE
                     // close keyboard after click enter
                     searchView.clearFocus()
-
                 }
 
                 return false
             }
 
-            override fun onQueryTextChange(queryText: String): Boolean {
-
+            override fun onQueryTextChange(newText: String): Boolean {
 
                 return false
             }
+
         })
     }
 
@@ -156,6 +153,6 @@ class SearchFragment : Fragment() {
     }
 
     companion object {
-        private val TAG = SearchFragment::class.java.simpleName
+        private val TAG = SearchTeamFragment::class.java.simpleName
     }
 }

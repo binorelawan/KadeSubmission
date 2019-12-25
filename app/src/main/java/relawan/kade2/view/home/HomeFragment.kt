@@ -65,7 +65,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // navigate to SearchFragment
+        // navigate to SearchMatchFragment
         view?.findNavController()?.navigate(R.id.action_home_to_searchFragment)
         return super.onOptionsItemSelected(item)
 

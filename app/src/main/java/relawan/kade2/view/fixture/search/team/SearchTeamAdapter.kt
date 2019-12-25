@@ -1,15 +1,16 @@
-package relawan.kade2.view.fixture.teams
+package relawan.kade2.view.fixture.search.team
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import relawan.kade2.databinding.ListTeamBinding
-import relawan.kade2.model.Teams
+import relawan.kade2.R
+import relawan.kade2.databinding.ListSearchTeamBinding
+import relawan.kade2.model.SearchTeam
 
-class TeamsAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<TeamsAdapter.ViewHolder>() {
+class SearchTeamAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<SearchTeamAdapter.ViewHolder>() {
 
-    var data = listOf<Teams>()
+    var data = listOf<SearchTeam>()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -31,31 +32,30 @@ class TeamsAdapter(private val onClickListener: OnClickListener) : RecyclerView.
         holder.bind(item)
     }
 
-    class ViewHolder(val binding: ListTeamBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: ListSearchTeamBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Teams) {
+        fun bind(item: SearchTeam) {
             binding.teamsName.text = item.strTeam
-            binding.teamsLogo.let { view ->
-                Glide.with(view.context).load(item.strTeamBadge).into(binding.teamsLogo)
-            }
+
+            if (item.strTeamBadge == "" || item.strTeamBadge == null) binding.teamsLogo.setImageResource(R.drawable.no_image)
+                else binding.teamsLogo.let { Glide.with(it.context).load(item.strTeamBadge).into(binding.teamsLogo) }
 
             binding.executePendingBindings()
         }
-
 
         companion object {
             // binding viewHolder
             fun from (parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
 
-                val binding = ListTeamBinding.inflate(layoutInflater, parent, false)
+                val binding = ListSearchTeamBinding.inflate(layoutInflater, parent, false)
                 return ViewHolder(binding)
             }
         }
     }
 
     // click listener
-    class OnClickListener(val clickListener: (teams: Teams) -> Unit) {
-        fun onClick(teams: Teams) = clickListener(teams)
+    class OnClickListener(val clickListener: (searchTeam: SearchTeam) -> Unit) {
+        fun onClick(searchTeam: SearchTeam) = clickListener(searchTeam)
     }
 }

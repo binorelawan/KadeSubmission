@@ -8,10 +8,11 @@ import org.junit.Rule
 import org.junit.Test
 import relawan.kade2.getOrAwaitValue
 import relawan.kade2.repository.Repository
+import relawan.kade2.view.fixture.search.match.SearchMatchViewModel
 
 class SearchViewModelTest {
 
-    private lateinit var searchViewModel: SearchViewModel
+    private lateinit var searchViewModel: SearchMatchViewModel
 
     private lateinit var repository: Repository
 
@@ -23,7 +24,7 @@ class SearchViewModelTest {
 
         repository = Repository()
 
-        searchViewModel = SearchViewModel(repository)
+        searchViewModel = SearchMatchViewModel(repository)
     }
 
     @Test

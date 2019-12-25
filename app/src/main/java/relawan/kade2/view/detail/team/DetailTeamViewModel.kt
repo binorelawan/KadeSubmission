@@ -12,11 +12,16 @@ import org.jetbrains.anko.db.insert
 import relawan.kade2.R
 import relawan.kade2.database.database
 import relawan.kade2.model.DetailTeam
+import relawan.kade2.model.SearchTeam
 import relawan.kade2.model.Teams
 import relawan.kade2.repository.DetailTeamRepoCallback
 import relawan.kade2.repository.Repository
 
-class DetailTeamViewModel(val context: Context?, val teams: Teams, val repository: Repository) : ViewModel() {
+class DetailTeamViewModel(val context: Context?, val teams: Teams?, val search: SearchTeam?, val repository: Repository) : ViewModel() {
+
+    private val _event = MutableLiveData<String>()
+    val event: LiveData<String>
+        get() = _event
 
     // detail team liveData
     private val _detailTeam = MutableLiveData<List<DetailTeam>>()
@@ -25,7 +30,9 @@ class DetailTeamViewModel(val context: Context?, val teams: Teams, val repositor
 
     init {
 
-        getDetailTeam(teams.idTeam.toString())
+        _event.value = teams?.idTeam ?: search?.idTeam
+
+        getDetailTeam(event.value.toString())
     }
 
     private fun getDetailTeam(idTeam: String) {

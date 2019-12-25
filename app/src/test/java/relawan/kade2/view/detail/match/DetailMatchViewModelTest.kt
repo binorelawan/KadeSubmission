@@ -8,7 +8,7 @@ import org.junit.Rule
 import org.junit.Test
 import relawan.kade2.getOrAwaitValue
 import relawan.kade2.model.Match
-import relawan.kade2.model.Search
+import relawan.kade2.model.SearchMatch
 import relawan.kade2.repository.Repository
 
 class DetailMatchViewModelTest {
@@ -19,7 +19,7 @@ class DetailMatchViewModelTest {
 
     private lateinit var detail: Match
 
-    private var search: Search? = null
+    private var search: SearchMatch? = null
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()

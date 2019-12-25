@@ -12,6 +12,7 @@
 
     <!--search fragment-->
     <string name="search">Search</string>
+    <string name="match_can_t_be_found">Match Can\'t Be Found !!!</string>
     <string name="team_can_t_be_found">Team Can\'t Be Found !!!</string>
     <string name="enter_team_name">Enter Team Name !!</string>
 
@@ -21,6 +22,7 @@
     <string name="next_match_fragment">Next Match</string>
     <string name="last_match_fragment">Last Match</string>
     <string name="detail_match_fragment">Detail Match</string>
+    <string name="search_match_fragment">Search Football Match</string>
     <string name="search_team_fragment">Search Football Team</string>
     <string name="league_teams_fragment">League Teams</string>
     <string name="detail_team_fragment">Detail Team</string>
@@ -49,7 +51,7 @@
     <string name="logo_teams">logo teams</string>
     <string name="league_teams">League Teams</string>
 
-
+    <!--team detail-->
     <string name="year_text">Formed Year :</string>
     <string name="country_text">Country :</string>
     <string name="stadium_text">Stadium :</string>

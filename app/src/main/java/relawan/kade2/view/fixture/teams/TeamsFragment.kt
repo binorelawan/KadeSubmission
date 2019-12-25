@@ -3,10 +3,10 @@ package relawan.kade2.view.fixture.teams
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import relawan.kade2.R
 import relawan.kade2.databinding.FragmentTeamsBinding
@@ -41,7 +41,7 @@ class TeamsFragment : Fragment() {
         // adapter
         val adapter = TeamsAdapter(TeamsAdapter.OnClickListener {
             // navigate to detailTeamFragment with argument
-            val action = TeamsFragmentDirections.actionTeamsFragmentToDetailTeamFragment(it)
+            val action = TeamsFragmentDirections.actionTeamsFragmentToDetailTeamFragment(it, null)
             findNavController().navigate(action)
         })
         binding.teamsList.adapter = adapter
@@ -68,7 +68,8 @@ class TeamsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return  when(item.itemId) {
             R.id.search_menu -> {
-                Toast.makeText(context, "search team", Toast.LENGTH_LONG).show()
+                // navigate to SearchTeamFragment
+                view?.findNavController()?.navigate(R.id.action_teamsFragment_to_searchTeamFragment)
 
                 true
             }

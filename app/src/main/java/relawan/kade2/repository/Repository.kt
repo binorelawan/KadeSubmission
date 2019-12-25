@@ -150,17 +150,17 @@ class Repository {
 
 
     // get Search Match
-    fun getSearchMatchRepo(query: String, callback: SearchRepoCallback): MutableLiveData<List<Search>> {
+    fun getSearchMatchRepo(query: String, callback: SearchMatchRepoCallback): MutableLiveData<List<SearchMatch>> {
         EspressoIdlingResource.increment()
-        val searchList = MutableLiveData<List<Search>>()
-        val call = leagueApiService.getSearch(query)
-        call.enqueue(object : Callback<SearchResponse?> {
-            override fun onFailure(call: Call<SearchResponse?>, t: Throwable) {
+        val searchList = MutableLiveData<List<SearchMatch>>()
+        val call = leagueApiService.getSearchMatch(query)
+        call.enqueue(object : Callback<SearchMatchResponse?> {
+            override fun onFailure(call: Call<SearchMatchResponse?>, t: Throwable) {
                 searchList.value = null
                 callback.onError()
             }
 
-            override fun onResponse(call: Call<SearchResponse?>, response: Response<SearchResponse?>) {
+            override fun onResponse(call: Call<SearchMatchResponse?>, response: Response<SearchMatchResponse?>) {
 
                 if (response.isSuccessful) {
                     val result = response.body()?.event
@@ -233,7 +233,7 @@ class Repository {
     }
 
 
-    // get detail team
+    // get Detail Team
     fun getDetailTeamRepo(idTeam: String, callback: DetailTeamRepoCallback): MutableLiveData<List<DetailTeam>> {
         val detailTeamList = MutableLiveData<List<DetailTeam>>()
         val call = leagueApiService.getDetailTeam(idTeam)
@@ -260,6 +260,32 @@ class Repository {
     }
 
 
+    // get Search Team
+    fun getSearchTeamRepo(query: String, callback: SearchTeamRepoCallback): MutableLiveData<List<SearchTeam>> {
+        EspressoIdlingResource.increment()
+        val searchList = MutableLiveData<List<SearchTeam>>()
+        val call = leagueApiService.getSearchTeam(query)
+        call.enqueue(object : Callback<SearchTeamResponse?> {
+            override fun onFailure(call: Call<SearchTeamResponse?>, t: Throwable) {
+                callback.onError()
+            }
+
+            override fun onResponse(call: Call<SearchTeamResponse?>, response: Response<SearchTeamResponse?>) {
+
+                if (response.isSuccessful) {
+                    val result = response.body()?.teams
+                    result?.let {
+                        callback.onSuccess(it)
+                    } ?: callback.onError()
+                } else {
+                    callback.onError()
+                }
+                EspressoIdlingResource.decrement()
+            }
+        })
+
+        return searchList
+    }
 }
 
 interface LeagueRepoCallback {
@@ -282,9 +308,9 @@ interface DetailMatchRepoCallback {
     fun onSuccess(detailMatch: List<DetailMatch>)
 }
 
-interface SearchRepoCallback {
+interface SearchMatchRepoCallback {
     fun onError()
-    fun onSuccess(search: List<Search>)
+    fun onSuccess(search: List<SearchMatch>)
 }
 
 interface TableLeagueRepoCallback {
@@ -300,4 +326,9 @@ interface TeamsRepoCallback {
 interface DetailTeamRepoCallback {
     fun onError()
     fun onSuccess(detailTeam: List<DetailTeam>)
+}
+
+interface SearchTeamRepoCallback {
+    fun onError()
+    fun onSuccess(search: List<SearchTeam>)
 }
