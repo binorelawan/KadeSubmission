@@ -25,7 +25,7 @@ data class Match(
 ) : Parcelable {
 
     companion object {
-        const val TABLE_FAVORITE: String = "TABLE_FAVORITE"
+        const val TABLE_FAVORITE_MATCH: String = "TABLE_FAVORITE_MATCH"
         const val ID: String = "_ID"
         const val ID_EVENT: String = "ID_EVENT"
         const val DATE_EVENT: String = "DATE_EVENT"

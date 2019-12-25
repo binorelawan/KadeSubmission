@@ -1,14 +1,14 @@
-package relawan.kade2.view.favorite
+package relawan.kade2.view.favorite.match
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import relawan.kade2.R
-import relawan.kade2.databinding.ListFavoriteBinding
+import relawan.kade2.databinding.ListFavoriteMatchBinding
 import relawan.kade2.model.Match
 import relawan.kade2.utils.DateTime
 
-class FavoriteAdapter(private val favorite: List<Match>, private val onClickListener: OnClickListener) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
+class FavoriteMatchAdapter(private val favorite: List<Match>, private val onClickListener: OnClickListener) : RecyclerView.Adapter<FavoriteMatchAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,7 +27,7 @@ class FavoriteAdapter(private val favorite: List<Match>, private val onClickList
         holder.bind(item)
     }
 
-    class ViewHolder(val binding: ListFavoriteBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: ListFavoriteMatchBinding) : RecyclerView.ViewHolder(binding.root) {
 
         private val strip = itemView.resources.getString(R.string.strip)
 
@@ -49,7 +49,7 @@ class FavoriteAdapter(private val favorite: List<Match>, private val onClickList
             fun from (parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
 
-                val binding = ListFavoriteBinding.inflate(layoutInflater, parent, false)
+                val binding = ListFavoriteMatchBinding.inflate(layoutInflater, parent, false)
                 return ViewHolder(binding)
             }
         }

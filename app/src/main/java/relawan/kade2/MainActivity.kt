@@ -23,10 +23,12 @@ class MainActivity : AppCompatActivity() {
 
         val navController = this.findNavController(R.id.nav_host_fragment)
 
+        // This code for remove back button from action bar in fragment
         val appBarConfiguration = AppBarConfiguration
             .Builder(
                 R.id.home,
-                R.id.favoriteFragment)
+                R.id.favoriteMatchFragment,
+                R.id.favoriteTeamFragment)
             .build()
 
 
@@ -47,7 +49,8 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.home -> showBottomNav()
-                R.id.favoriteFragment -> showBottomNav()
+                R.id.favoriteMatchFragment -> showBottomNav()
+                R.id.favoriteTeamFragment -> showBottomNav()
                 else -> hideBottomNav()
             }
         }

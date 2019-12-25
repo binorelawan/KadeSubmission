@@ -22,15 +22,21 @@
     <string name="last_match_fragment">Last Match</string>
     <string name="detail_match_fragment">Detail Match</string>
     <string name="search_team_fragment">Search Football Team</string>
+    <string name="league_teams_fragment">League Teams</string>
+    <string name="detail_team_fragment">Detail Team</string>
     <string name="favorite_match_fragment">Favorite Match</string>
+    <string name="favorite_team_fragment">Favorite Team</string>
 
     <!--home fragment-->
     <string name="logo_league">logo league</string>
     <string name="home">Home</string>
 
     <!--favorite fragment-->
-    <string name="favorite">Favorite</string>
+    <string name="favorite_match">Match</string>
+    <string name="favorite_team">Teams</string>
     <string name="favorites_button">Favorites Button</string>
+    <string name="add_to_favorite">Add To Favorite</string>
+    <string name="remove_from_favorite">Remove From Favorite</string>
 
     <!-- table league fragment -->
     <string name="rank">#</string>
@@ -47,5 +53,9 @@
     <string name="year_text">Formed Year :</string>
     <string name="country_text">Country :</string>
     <string name="stadium_text">Stadium :</string>
+
+
+
+
 
 </resources>

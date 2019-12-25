@@ -7,9 +7,15 @@
         android:icon="@drawable/ic_home_black_48dp"
         android:title="@string/home" />
 
-    <!-- the same ID is used for ID fragment in nav_graph.xml (favoriteFragment)  -->
+    <!-- the same ID is used for ID fragment in nav_graph.xml (favoriteMatchFragment)  -->
     <item
-        android:id="@id/favoriteFragment"
+        android:id="@id/favoriteMatchFragment"
         android:icon="@drawable/ic_favorite_black_48dp"
-        android:title="@string/favorite" />
+        android:title="@string/favorite_match" />
+
+    <!-- the same ID is used for ID fragment in nav_graph.xml (favoriteTeamFragment)   -->
+    <item
+        android:id="@id/favoriteTeamFragment"
+        android:icon="@drawable/ic_favorite_black_48dp"
+        android:title="@string/favorite_team" />
 </menu>

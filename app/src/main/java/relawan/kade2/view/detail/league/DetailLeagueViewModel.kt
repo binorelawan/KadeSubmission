@@ -18,7 +18,6 @@ class DetailLeagueViewModel(val league : League, val repository: Repository): Vi
     val detail: LiveData<List<DetailLeague>>
         get() = _detail
 
-    // TODO: KADE 5 table liveData
     private val _table = MutableLiveData<List<Table>>()
     val table: LiveData<List<Table>>
         get() = _table
@@ -47,7 +46,6 @@ class DetailLeagueViewModel(val league : League, val repository: Repository): Vi
         })
     }
 
-    // TODO: KADE 5 table call API viewModel
     private fun getTableLeague(idLeague: String) {
 
         repository.getTableLeagueRepo(idLeague, object : TableLeagueRepoCallback {

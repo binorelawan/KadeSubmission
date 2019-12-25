@@ -41,7 +41,7 @@ class DetailLeagueFragment : Fragment() {
         detailLeagueViewModel = ViewModelProviders.of(this, viewModelFactory).get(
             DetailLeagueViewModel::class.java)
 
-        // adapter
+        // detailLeague adapter
         val leagueAdapter = DetailLeagueAdapter()
         binding.leagueDetail.adapter = leagueAdapter
 
@@ -55,7 +55,7 @@ class DetailLeagueFragment : Fragment() {
             }
         })
 
-        // TODO: KADE 5 Table Adapter
+        // tableLeague adapter
         val tableAdapter = TableAdapter()
         binding.leagueTable.adapter = tableAdapter
 

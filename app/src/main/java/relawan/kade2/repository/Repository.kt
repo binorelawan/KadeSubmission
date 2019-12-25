@@ -178,7 +178,7 @@ class Repository {
         return searchList
     }
 
-    // TODO: KADE 5 table call API repo
+
     // get Table League
     fun getTableLeagueRepo(idLeague: String, callback: TableLeagueRepoCallback): MutableLiveData<List<Table>> {
         val tableList = MutableLiveData<List<Table>>()
@@ -205,7 +205,7 @@ class Repository {
         return tableList
     }
 
-    // TODO: KADE 5 teams call API repo
+
     // get Teams
     fun getTeamsRepo(idLeague: String, callback: TeamsRepoCallback): MutableLiveData<List<Teams>> {
         val teamList = MutableLiveData<List<Teams>>()
@@ -232,7 +232,7 @@ class Repository {
         return teamList
     }
 
-    // TODO: KADE 5 detail team call API repo
+
     // get detail team
     fun getDetailTeamRepo(idTeam: String, callback: DetailTeamRepoCallback): MutableLiveData<List<DetailTeam>> {
         val detailTeamList = MutableLiveData<List<DetailTeam>>()

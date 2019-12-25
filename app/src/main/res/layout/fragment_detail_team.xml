@@ -12,35 +12,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:orientation="horizontal"
-            android:padding="@dimen/small_padding">
-
-            <Button
-                android:id="@+id/last_match"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/small_margin"
-                android:layout_marginEnd="@dimen/small_margin"
-                android:layout_weight="1"
-                android:text="@string/last_match"
-                tools:ignore="ButtonStyle" />
-
-
-            <Button
-                android:id="@+id/next_match"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/small_margin"
-                android:layout_marginEnd="@dimen/small_margin"
-                android:layout_weight="1"
-                android:text="@string/next_match"
-                tools:ignore="ButtonStyle" />
-
-        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -53,7 +24,6 @@
             android:id="@+id/team_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/list_detail_team">

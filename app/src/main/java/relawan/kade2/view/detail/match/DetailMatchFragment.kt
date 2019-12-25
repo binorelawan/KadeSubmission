@@ -141,7 +141,7 @@ class DetailMatchFragment : Fragment() {
 
     private fun favoriteState(){
         context?.database?.use {
-            val result = select(Match.TABLE_FAVORITE)
+            val result = select(Match.TABLE_FAVORITE_MATCH)
                 .whereArgs(Match.ID_EVENT+" ={id}",
                     "id" to dataDetail?.idEvent.toString())
 

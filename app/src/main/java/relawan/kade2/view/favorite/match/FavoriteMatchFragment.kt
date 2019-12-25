@@ -1,4 +1,4 @@
-package relawan.kade2.view.favorite
+package relawan.kade2.view.favorite.match
 
 
 import android.os.Bundle
@@ -13,36 +13,37 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.select
 import relawan.kade2.database.database
-import relawan.kade2.databinding.FragmentFavoriteBinding
+import relawan.kade2.databinding.FragmentFavoriteMatchBinding
 import relawan.kade2.model.Match
 
 /**
  * A simple [Fragment] subclass.
  */
-class FavoriteFragment : Fragment() {
+class FavoriteMatchFragment : Fragment() {
 
     private var favorites: MutableList<Match> = mutableListOf()
-    private lateinit var mAdapter: FavoriteAdapter
+    private lateinit var mAdapter: FavoriteMatchAdapter
 
-    lateinit var favoriteRecycler: RecyclerView
-    lateinit var favoriteSwipe: SwipeRefreshLayout
+    private lateinit var favoriteRecycler: RecyclerView
+    private lateinit var favoriteSwipe: SwipeRefreshLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
 
-        val binding = FragmentFavoriteBinding.inflate(inflater)
+        val binding = FragmentFavoriteMatchBinding.inflate(inflater)
 
         binding.lifecycleOwner = this
 
         favoriteRecycler = binding.favoriteRecycler
         favoriteSwipe = binding.favoriteSwipe
 
-        mAdapter = FavoriteAdapter(favorites, FavoriteAdapter.OnClickListener{
-            
-            val action = FavoriteFragmentDirections.actionFavoriteFragmentToDetailMatchFragment(it, null)
+        mAdapter = FavoriteMatchAdapter(favorites, FavoriteMatchAdapter.OnClickListener {
+
+            val action = FavoriteMatchFragmentDirections.actionFavoriteMatchFragmentToDetailMatchFragment(it, null)
             findNavController().navigate(action)
+
         })
 
         favoriteRecycler.layoutManager = LinearLayoutManager(context)
@@ -63,7 +64,7 @@ class FavoriteFragment : Fragment() {
         favorites.clear()
         context?.database?.use {
             favoriteSwipe.isRefreshing = false
-            val result = select(Match.TABLE_FAVORITE)
+            val result = select(Match.TABLE_FAVORITE_MATCH)
             val favorite = result.parseList(classParser<Match>())
             favorites.addAll(favorite)
             mAdapter.notifyDataSetChanged()

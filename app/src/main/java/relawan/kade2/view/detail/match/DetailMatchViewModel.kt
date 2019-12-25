@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
+import relawan.kade2.R
 import relawan.kade2.database.database
 import relawan.kade2.model.DetailMatch
 import relawan.kade2.model.Match
@@ -61,7 +62,7 @@ class DetailMatchViewModel(val context: Context?, val detail: Match?, val search
         try {
             context?.database?.use {
                 insert(
-                    Match.TABLE_FAVORITE,
+                    Match.TABLE_FAVORITE_MATCH,
                     Match.ID_EVENT to data?.idEvent,
                     Match.DATE_EVENT to data?.dateEvent,
                     Match.STR_TIME to data?.strTime,
@@ -79,7 +80,7 @@ class DetailMatchViewModel(val context: Context?, val detail: Match?, val search
                     Match.STR_AWAY_RED_CARDS to data?.strAwayRedCards
                 )
             }
-            Toast.makeText(context, "Add To Favorite", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context?.getString(R.string.add_to_favorite), Toast.LENGTH_LONG).show()
         } catch (e: SQLiteConstraintException) {
             Log.e(TAG, "addFavorite = ${e.message}")
         }
@@ -89,13 +90,13 @@ class DetailMatchViewModel(val context: Context?, val detail: Match?, val search
         try {
             context?.database?.use {
                 delete(
-                    Match.TABLE_FAVORITE,
+                    Match.TABLE_FAVORITE_MATCH,
                     Match.ID_EVENT+" ={id}",
                     "id" to data?.idEvent.toString()
 
                 )
             }
-            Toast.makeText(context, "Remove From Favorite", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context?.getString(R.string.remove_from_favorite), Toast.LENGTH_LONG).show()
         } catch (e: SQLiteConstraintException) {
             Log.e(TAG, "removeFavorite = ${e.message}")
         }

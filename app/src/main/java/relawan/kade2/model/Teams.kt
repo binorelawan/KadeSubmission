@@ -5,54 +5,32 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Teams(
+    val id: Long?,
     val idLeague: String?,
-    val idSoccerXML: String?,
     val idTeam: String?,
     val intFormedYear: String?,
-    val intLoved: String?,
-    val intStadiumCapacity: String?,
-    val strAlternate: String?,
     val strCountry: String?,
-    val strDescriptionCN: String?,
-    val strDescriptionDE: String?,
     val strDescriptionEN: String?,
-    val strDescriptionES: String?,
-    val strDescriptionFR: String?,
-    val strDescriptionHU: String?,
-    val strDescriptionIL: String?,
-    val strDescriptionIT: String?,
-    val strDescriptionJP: String?,
-    val strDescriptionNL: String?,
-    val strDescriptionNO: String?,
-    val strDescriptionPL: String?,
-    val strDescriptionPT: String?,
-    val strDescriptionRU: String?,
-    val strDescriptionSE: String?,
-    val strDivision: String?,
-    val strFacebook: String?,
-    val strGender: String?,
-    val strInstagram: String?,
-    val strKeywords: String?,
-    val strLeague: String?,
-    val strLocked: String?,
-    val strManager: String?,
-    val strRSS: String?,
-    val strSport: String?,
     val strStadium: String?,
-    val strStadiumDescription: String?,
-    val strStadiumLocation: String?,
-    val strStadiumThumb: String?,
     val strTeam: String?,
     val strTeamBadge: String?,
-    val strTeamBanner: String?,
-    val strTeamFanart1: String?,
-    val strTeamFanart2: String?,
-    val strTeamFanart3: String?,
-    val strTeamFanart4: String?,
-    val strTeamJersey: String?,
-    val strTeamLogo: String?,
-    val strTeamShort: String?,
-    val strTwitter: String?,
-    val strWebsite: String?,
-    val strYoutube: String?
-) : Parcelable
+    val strTeamBanner: String?
+
+) : Parcelable {
+
+    companion object {
+        const val TABLE_FAVORITE_TEAM: String = "TABLE_FAVORITE_TEAM"
+        const val ID: String = "_ID"
+        const val ID_LEAGUE: String = "ID_LEAGUE"
+        const val ID_TEAM: String = "ID_TEAM"
+        const val INT_FORMED_YEAR: String = "INT_FORMED_YEAR"
+        const val STR_COUNTRY: String = "STR_COUNTRY"
+        const val STR_DESCRIPTION_EN: String = "STR_DESCRIPTION_EN"
+        const val STR_STADIUM: String = "STR_STADIUM"
+        const val STR_TEAM: String = "STR_TEAM"
+        const val STR_TEAM_BADGE: String = "STR_TEAM_BADGE"
+        const val STR_TEAM_BANNER: String = "STR_TEAM_BANNER"
+
+
+    }
+}
