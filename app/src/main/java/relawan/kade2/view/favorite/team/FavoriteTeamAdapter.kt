@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import relawan.kade2.R
 import relawan.kade2.databinding.ListFavoriteTeamBinding
 import relawan.kade2.model.Teams
 
@@ -29,9 +30,9 @@ class FavoriteTeamAdapter(private val favorite: List<Teams>, private val onClick
 
         fun bind(item: Teams) {
             binding.teamsName.text = item.strTeam
-            binding.teamsLogo.let { view ->
-                Glide.with(view.context).load(item.strTeamBadge).into(binding.teamsLogo)
-            }
+
+            if (item.strTeamBadge == "" || item.strTeamBadge == null) binding.teamsLogo.setImageResource(R.drawable.no_image)
+                else binding.teamsLogo.let { Glide.with(it.context).load(item.strTeamBadge).into(binding.teamsLogo) }
         }
 
         companion object {
