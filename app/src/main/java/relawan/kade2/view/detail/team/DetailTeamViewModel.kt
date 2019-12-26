@@ -35,7 +35,7 @@ class DetailTeamViewModel(val context: Context?, val teams: Teams?, val search: 
         getDetailTeam(event.value.toString())
     }
 
-    private fun getDetailTeam(idTeam: String) {
+    fun getDetailTeam(idTeam: String) {
 
         repository.getDetailTeamRepo(idTeam, object : DetailTeamRepoCallback {
             override fun onError() {

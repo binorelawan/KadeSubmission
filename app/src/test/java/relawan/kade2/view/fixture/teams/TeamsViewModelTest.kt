@@ -1,4 +1,4 @@
-package relawan.kade2.view.fixture.search
+package relawan.kade2.view.fixture.teams
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.hamcrest.MatcherAssert
@@ -7,14 +7,16 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import relawan.kade2.getOrAwaitValue
+import relawan.kade2.model.League
 import relawan.kade2.repository.Repository
-import relawan.kade2.view.fixture.search.match.SearchMatchViewModel
 
-class SearchViewModelTest {
+class TeamsViewModelTest {
 
-    private lateinit var searchViewModel: SearchMatchViewModel
+    private lateinit var teamsViewModel: TeamsViewModel
 
     private lateinit var repository: Repository
+
+    private lateinit var league: League
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
@@ -24,17 +26,18 @@ class SearchViewModelTest {
 
         repository = Repository()
 
-        searchViewModel = SearchMatchViewModel(repository)
+        league = League(idLeague ="4328", strLeague = "English Premier League",strSport = "Soccer", strLeagueAlternate = "Premier League")
+
+        teamsViewModel = TeamsViewModel(league, repository)
+
     }
 
     @Test
-    fun getSearchMatch_test() {
+    fun getTeams_test() {
 
-        val query = "Arsenal"
+        teamsViewModel.getTeams(league.idLeague.toString())
 
-        searchViewModel.getSearchMatch(query)
-
-        val result = searchViewModel.search.getOrAwaitValue()
+        val result = teamsViewModel.teams.getOrAwaitValue()
 
         MatcherAssert.assertThat(result, Matchers.not(Matchers.nullValue()))
 

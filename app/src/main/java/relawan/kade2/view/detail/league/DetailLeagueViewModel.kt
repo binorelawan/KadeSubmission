@@ -46,7 +46,7 @@ class DetailLeagueViewModel(val league : League, val repository: Repository): Vi
         })
     }
 
-    private fun getTableLeague(idLeague: String) {
+    fun getTableLeague(idLeague: String) {
 
         repository.getTableLeagueRepo(idLeague, object : TableLeagueRepoCallback {
             override fun onError() {

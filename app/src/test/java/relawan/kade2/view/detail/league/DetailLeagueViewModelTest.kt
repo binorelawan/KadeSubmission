@@ -46,4 +46,20 @@ class DetailLeagueViewModelTest {
          */
 //        MatcherAssert.assertThat(result, Matchers.nullValue())
     }
+
+    @Test
+    fun getTableLeague_test() {
+
+        detailLeagueViewModel.getTableLeague(league.idLeague.toString())
+
+        val result = detailLeagueViewModel.table.getOrAwaitValue()
+
+        MatcherAssert.assertThat(result, Matchers.not(Matchers.nullValue()))
+
+        /**
+         * TIPS :
+         * Untuk Mengetahui result value, uncomment code di bawah ini
+         */
+//        MatcherAssert.assertThat(result, Matchers.nullValue())
+    }
 }

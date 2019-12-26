@@ -43,6 +43,7 @@ class Repository {
 
     // get Detail League
     fun getDetailLeagueRepo(idLeague: String, callback: DetailLeagueRepoCallback): MutableLiveData<List<DetailLeague>> {
+        EspressoIdlingResource.increment()
         val detailLeagueList = MutableLiveData<List<DetailLeague>>()
         val call = leagueApiService.getDetailLeague(idLeague)
         call.enqueue(object : Callback<DetailLeagueResponse> {
@@ -60,6 +61,7 @@ class Repository {
                 } else {
                     callback.onError()
                 }
+                EspressoIdlingResource.decrement()
             }
 
         })
@@ -70,6 +72,7 @@ class Repository {
 
     // get Last Match List
     fun getLastMatchRepo(idLeague: String, callback: MatchRepoCallback): MutableLiveData<List<Match>> {
+        EspressoIdlingResource.increment()
         val lastMatchList = MutableLiveData<List<Match>>()
         val call = leagueApiService.getLastMatch(idLeague)
         call.enqueue(object : Callback<MatchResponse> {
@@ -87,6 +90,7 @@ class Repository {
                 } else {
                     callback.onError()
                 }
+                EspressoIdlingResource.decrement()
             }
 
         })
@@ -97,6 +101,7 @@ class Repository {
 
     // get Next Match List
     fun getNextMatchRepo(idLeague: String, callback: MatchRepoCallback): MutableLiveData<List<Match>> {
+        EspressoIdlingResource.increment()
         val nextMatchList = MutableLiveData<List<Match>>()
         val call = leagueApiService.getNextMatch(idLeague)
         call.enqueue(object : Callback<MatchResponse> {
@@ -114,6 +119,7 @@ class Repository {
                 } else {
                     callback.onError()
                 }
+                EspressoIdlingResource.decrement()
             }
 
         })
@@ -124,6 +130,7 @@ class Repository {
 
     // get Detail Match List
     fun getDetailMatchRepo(idEvent: String, callback: DetailMatchRepoCallback): MutableLiveData<List<DetailMatch>> {
+        EspressoIdlingResource.increment()
         val detailMatchList = MutableLiveData<List<DetailMatch>>()
         val call = leagueApiService.getDetailMatch(idEvent)
         call.enqueue(object : Callback<DetailMatchResponse> {
@@ -141,6 +148,7 @@ class Repository {
                 } else {
                     callback.onError()
                 }
+                EspressoIdlingResource.decrement()
             }
 
         })
@@ -181,6 +189,7 @@ class Repository {
 
     // get Table League
     fun getTableLeagueRepo(idLeague: String, callback: TableLeagueRepoCallback): MutableLiveData<List<Table>> {
+        EspressoIdlingResource.increment()
         val tableList = MutableLiveData<List<Table>>()
         val call = leagueApiService.getTable(idLeague)
         call.enqueue(object : Callback<TableResponse> {
@@ -198,6 +207,7 @@ class Repository {
                 } else {
                     callback.onError()
                 }
+                EspressoIdlingResource.decrement()
             }
 
         })
@@ -208,6 +218,7 @@ class Repository {
 
     // get Teams
     fun getTeamsRepo(idLeague: String, callback: TeamsRepoCallback): MutableLiveData<List<Teams>> {
+        EspressoIdlingResource.increment()
         val teamList = MutableLiveData<List<Teams>>()
         val call = leagueApiService.getTeams(idLeague)
         call.enqueue(object :Callback<TeamsResponse> {
@@ -225,6 +236,7 @@ class Repository {
                 } else {
                     callback.onError()
                 }
+                EspressoIdlingResource.decrement()
             }
 
         })
@@ -235,6 +247,7 @@ class Repository {
 
     // get Detail Team
     fun getDetailTeamRepo(idTeam: String, callback: DetailTeamRepoCallback): MutableLiveData<List<DetailTeam>> {
+        EspressoIdlingResource.increment()
         val detailTeamList = MutableLiveData<List<DetailTeam>>()
         val call = leagueApiService.getDetailTeam(idTeam)
         call.enqueue(object :Callback<DetailTeamResponse> {
@@ -252,6 +265,7 @@ class Repository {
                 } else {
                     callback.onError()
                 }
+                EspressoIdlingResource.decrement()
             }
 
         })
