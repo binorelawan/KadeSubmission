@@ -5,19 +5,47 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class DetailMatch(
-    val dateEvent: String?,
-    val idAwayTeam: String?,
-    val idEvent: String?,
-    val idHomeTeam: String?,
-    val intAwayScore: String?,
-    val intHomeScore: String?,
-    val strAwayGoalDetails: String?,
-    val strAwayRedCards: String?,
-    val strAwayTeam: String?,
-    val strAwayYellowCards: String?,
-    val strHomeGoalDetails: String?,
-    val strHomeRedCards: String?,
-    val strHomeTeam: String?,
-    val strHomeYellowCards: String?,
-    val strTime: String?
+    var idEvent: String?,
+
+
+    var dateEvent: String?,
+
+
+    var strTime: String?,
+
+
+    var idAwayTeam: String?,
+
+
+    var idHomeTeam: String?,
+
+
+    var strAwayTeam: String?,
+
+
+    var strHomeTeam: String?,
+
+
+    var intAwayScore: String?,
+
+
+    var intHomeScore: String?,
+
+
+    var strAwayGoalDetails: String?,
+
+
+    var strHomeGoalDetails: String?,
+
+
+    var strAwayRedCards: String?,
+
+
+    var strHomeRedCards: String?,
+
+
+    var strAwayYellowCards: String?,
+
+
+    var strHomeYellowCards: String?
 ) : Parcelable

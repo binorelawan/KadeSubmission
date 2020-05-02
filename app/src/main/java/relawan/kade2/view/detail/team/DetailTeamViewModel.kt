@@ -4,20 +4,22 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import relawan.kade2.R
+import relawan.kade2.database.FavoriteTeam
+import relawan.kade2.database.FavoriteTeamDao
 import relawan.kade2.database.database
 import relawan.kade2.model.DetailTeam
 import relawan.kade2.model.SearchTeam
 import relawan.kade2.model.Teams
 import relawan.kade2.repository.DetailTeamRepoCallback
+import relawan.kade2.repository.FavoriteTeamRepository
 import relawan.kade2.repository.Repository
 
-class DetailTeamViewModel(val context: Context?, val teams: Teams?, val search: SearchTeam?, val repository: Repository) : ViewModel() {
+class DetailTeamViewModel(val database: FavoriteTeamDao, val teams: Teams?, val search: SearchTeam?, val favorite: String?, val repository: Repository) : ViewModel() {
 
     private val _event = MutableLiveData<String>()
     val event: LiveData<String>
@@ -28,11 +30,28 @@ class DetailTeamViewModel(val context: Context?, val teams: Teams?, val search: 
     val detailTeam: LiveData<List<DetailTeam>>
         get() = _detailTeam
 
+    private val favoriteRepository: FavoriteTeamRepository
+
+    val isCheck: LiveData<Boolean>
+
     init {
 
-        _event.value = teams?.idTeam ?: search?.idTeam
+        _event.value = teams?.idTeam ?: search?.idTeam ?:favorite
 
         getDetailTeam(event.value.toString())
+
+        favoriteRepository = FavoriteTeamRepository(database)
+
+
+        /**The isFavoriteMatch method returns a LiveData from querying the database. The
+         * method can return null in two cases: when the database query is running and if no records
+         * are found. In these cases isPlanted is false. If a record is found then isPlanted is
+         * true.
+         **/
+        val check = favoriteRepository.isFavoriteTeam(event.value.toString())
+        isCheck = Transformations.map(check) {
+            it != null
+        }
     }
 
     fun getDetailTeam(idTeam: String) {
@@ -50,41 +69,12 @@ class DetailTeamViewModel(val context: Context?, val teams: Teams?, val search: 
         })
     }
 
-    fun insertFavorite(data: DetailTeam?) {
-        try {
-            context?.database?.use {
-                insert(
-                    Teams.TABLE_FAVORITE_TEAM,
-                    Teams.ID_LEAGUE to data?.idLeague,
-                    Teams.ID_TEAM to data?.idTeam,
-                    Teams.INT_FORMED_YEAR to data?.intFormedYear,
-                    Teams.STR_COUNTRY to data?.strCountry,
-                    Teams.STR_DESCRIPTION_EN to data?.strDescriptionEN,
-                    Teams.STR_STADIUM to data?.strStadium,
-                    Teams.STR_TEAM to data?.strTeam,
-                    Teams.STR_TEAM_BADGE to data?.strTeamBadge,
-                    Teams.STR_TEAM_BANNER to data?.strTeamBanner
-                )
-            }
-            Toast.makeText(context, context?.getString(R.string.add_to_favorite), Toast.LENGTH_LONG).show()
-        } catch (e: SQLiteConstraintException) {
-            Log.e(TAG, "addFavorite = ${e.message}")
-        }
+    fun insert(favoriteTeam: FavoriteTeam) = viewModelScope.launch {
+        favoriteRepository.insert(favoriteTeam)
     }
 
-    fun deleteFavorite(data: DetailTeam?) {
-        try {
-            context?.database?.use {
-                delete(
-                    Teams.TABLE_FAVORITE_TEAM,
-                    Teams.ID_LEAGUE+" ={id}",
-                    "id" to data?.idLeague.toString()
-                )
-            }
-            Toast.makeText(context, context?.getString(R.string.remove_from_favorite), Toast.LENGTH_LONG).show()
-        } catch (e: SQLiteConstraintException) {
-            Log.e(TAG, "removeFavorite = ${e.message}")
-        }
+    fun delete(favoriteTeam: FavoriteTeam) = viewModelScope.launch {
+        favoriteRepository.delete(favoriteTeam)
     }
 
     companion object {

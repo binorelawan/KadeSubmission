@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import relawan.kade2.databinding.FragmentLastMatchBinding
@@ -34,21 +35,21 @@ class LastMatchFragment : Fragment() {
 
         // get arguments
         val league = arguments?.let { LastMatchFragmentArgs.fromBundle(it).league }
-        val viewModelFactory = league?.let { LastMatchModelFactory(it, repository) }
+        val viewModelFactory = LastMatchModelFactory(league, repository)
 
         // viewModel
-        lastMatchViewModel = ViewModelProviders.of(this, viewModelFactory).get(LastMatchViewModel::class.java)
+        lastMatchViewModel = ViewModelProvider(this, viewModelFactory).get(LastMatchViewModel::class.java)
 
         // adapter
         val adapter = LastMatchAdapter(LastMatchAdapter.OnClickListener{
             // navigate to detailMatchFragment with argument
-            val action = LastMatchFragmentDirections.actionLastMatchFragmentToDetailMatchFragment(it, null)
+            val action = LastMatchFragmentDirections.actionLastMatchFragmentToDetailMatchFragment(it, null, null)
             findNavController().navigate(action)
         })
         binding.leagueLastMatch.adapter = adapter
 
         // get viewModel and adapter to show list
-        lastMatchViewModel.lastMatch.observe(this, Observer {
+        lastMatchViewModel.lastMatch.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.progressBar.visibility = View.GONE
                 adapter.data = it

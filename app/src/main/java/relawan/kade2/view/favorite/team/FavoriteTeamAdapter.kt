@@ -5,21 +5,28 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import relawan.kade2.R
+import relawan.kade2.database.FavoriteTeam
 import relawan.kade2.databinding.ListFavoriteTeamBinding
 import relawan.kade2.model.Teams
 
-class FavoriteTeamAdapter(private val favorite: List<Teams>, private val onClickListener: OnClickListener) : RecyclerView.Adapter<FavoriteTeamAdapter.ViewHolder>() {
+class FavoriteTeamAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<FavoriteTeamAdapter.ViewHolder>() {
+
+    var data = listOf<FavoriteTeam>()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
     }
 
     override fun getItemCount(): Int {
-        return favorite.size
+        return data.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = favorite[position]
+        val item = data[position]
         holder.itemView.setOnClickListener {
             onClickListener.onClick(item)
         }
@@ -28,7 +35,7 @@ class FavoriteTeamAdapter(private val favorite: List<Teams>, private val onClick
 
     class ViewHolder(val binding: ListFavoriteTeamBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Teams) {
+        fun bind(item: FavoriteTeam) {
             binding.teamsName.text = item.strTeam
 
             if (item.strTeamBadge == "" || item.strTeamBadge == null) binding.teamsLogo.setImageResource(R.drawable.no_image)
@@ -47,7 +54,7 @@ class FavoriteTeamAdapter(private val favorite: List<Teams>, private val onClick
     }
 
     // click listener
-    class OnClickListener(val clickListener: (teams: Teams) -> Unit) {
-        fun onClick(teams: Teams) = clickListener(teams)
+    class OnClickListener(val clickListener: (favoriteTeam: FavoriteTeam) -> Unit) {
+        fun onClick(favoriteTeam: FavoriteTeam) = clickListener(favoriteTeam)
     }
 }

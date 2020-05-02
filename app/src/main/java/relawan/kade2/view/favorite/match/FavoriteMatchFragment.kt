@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,11 +24,7 @@ import relawan.kade2.model.Match
  */
 class FavoriteMatchFragment : Fragment() {
 
-    private var favorites: MutableList<Match> = mutableListOf()
-    private lateinit var mAdapter: FavoriteMatchAdapter
-
-    private lateinit var favoriteRecycler: RecyclerView
-    private lateinit var favoriteSwipe: SwipeRefreshLayout
+    private lateinit var favoriteMatchViewModel: FavoriteMatchViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,38 +35,26 @@ class FavoriteMatchFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-        favoriteRecycler = binding.favoriteRecycler
-        favoriteSwipe = binding.favoriteSwipe
+        favoriteMatchViewModel = ViewModelProvider(this).get(FavoriteMatchViewModel::class.java)
 
-        mAdapter = FavoriteMatchAdapter(favorites, FavoriteMatchAdapter.OnClickListener {
-
-            val action = FavoriteMatchFragmentDirections.actionFavoriteMatchFragmentToDetailMatchFragment(it, null)
+        val adapter = FavoriteMatchAdapter(FavoriteMatchAdapter.OnClickListener {
+            // navigate to detailMatchFragment with argument
+            val action = FavoriteMatchFragmentDirections.actionFavoriteMatchFragmentToDetailMatchFragment(null, null, it.idEvent)
             findNavController().navigate(action)
-
+            Toast.makeText(context, it.idEvent, Toast.LENGTH_LONG).show()
         })
 
-        favoriteRecycler.layoutManager = LinearLayoutManager(context)
-        favoriteRecycler.adapter = mAdapter
+        binding.favoriteRecycler.adapter = adapter
 
-        showFavorite()
-
-        favoriteSwipe.setOnRefreshListener {
-            showFavorite()
-        }
+        favoriteMatchViewModel.favoriteMatch.observe(viewLifecycleOwner, Observer {
+            it.let {
+                adapter.data = it
+            }
+        })
 
         return binding.root
 
     }
 
 
-    private fun showFavorite(){
-        favorites.clear()
-        context?.database?.use {
-            favoriteSwipe.isRefreshing = false
-            val result = select(Match.TABLE_FAVORITE_MATCH)
-            val favorite = result.parseList(classParser<Match>())
-            favorites.addAll(favorite)
-            mAdapter.notifyDataSetChanged()
-        }
-    }
 }

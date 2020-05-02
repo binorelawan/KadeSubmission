@@ -55,20 +55,20 @@ class DetailMatchAdapter : RecyclerView.Adapter<DetailMatchAdapter.ViewHolder>()
 
         // detail goal
         binding.detailGoalHome.text = if (item.strHomeGoalDetails == "" || item.strHomeGoalDetails == null) strip
-                                        else item.strHomeGoalDetails.replace(";","\n")
+                                        else item.strHomeGoalDetails!!.replace(";","\n")
         binding.detailGoalAway.text = if (item.strAwayGoalDetails == "" || item.strAwayGoalDetails == null) strip
-                                        else item.strAwayGoalDetails.replace(";","\n")
+                                        else item.strAwayGoalDetails!!.replace(";","\n")
 
         // detail yellow card
         binding.yellowCardHome.text = if(item.strHomeYellowCards == "" || item.strHomeYellowCards == null) strip
-                                        else item.strHomeYellowCards.replace(";", "\n")
+                                        else item.strHomeYellowCards!!.replace(";", "\n")
         binding.yellowCardAway.text = if (item.strAwayYellowCards == "" || item.strAwayYellowCards == null) strip
-                                        else item.strAwayYellowCards.replace(";", "\n")
+                                        else item.strAwayYellowCards!!.replace(";", "\n")
         // detail red card
         binding.redCardHome.text = if(item.strHomeRedCards == "" || item.strHomeRedCards == null) strip
-                                        else item.strHomeRedCards.replace(";", "\n")
+                                        else item.strHomeRedCards!!.replace(";", "\n")
         binding.redCardAway.text = if(item.strAwayRedCards == "" || item.strAwayRedCards == null) strip
-                                        else item.strAwayRedCards.replace(";", "\n")
+                                        else item.strAwayRedCards!!.replace(";", "\n")
 
         // show logo
         binding.logoHome.let {view ->

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -34,7 +35,7 @@ class HomeFragment : Fragment() {
         val viewModelFactory = HomeModelFactory(repository)
 
         // viewModel
-        homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
 
         // adapter
@@ -46,7 +47,7 @@ class HomeFragment : Fragment() {
         binding.leagueList.adapter = adapter
 
         // get viewModel and adapter to show list
-        homeViewModel.leagueName.observe(this, Observer {
+        homeViewModel.leagueName.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.progressBar.visibility = View.GONE
                 adapter.data = it

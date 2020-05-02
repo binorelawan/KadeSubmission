@@ -4,20 +4,22 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import relawan.kade2.R
+import relawan.kade2.database.FavoriteMatch
+import relawan.kade2.database.FavoriteMatchDao
 import relawan.kade2.database.database
 import relawan.kade2.model.DetailMatch
 import relawan.kade2.model.Match
 import relawan.kade2.model.SearchMatch
 import relawan.kade2.repository.DetailMatchRepoCallback
+import relawan.kade2.repository.FavoriteMatchRepository
 import relawan.kade2.repository.Repository
 
-class DetailMatchViewModel(val context: Context?, val detail: Match?, val search: SearchMatch?, val repository: Repository) : ViewModel() {
+class DetailMatchViewModel(val database: FavoriteMatchDao, val detail: Match?, val search: SearchMatch?, val favorite: String?, val repository: Repository) : ViewModel() {
 
     private val _event = MutableLiveData<String>()
     val event: LiveData<String>
@@ -28,14 +30,28 @@ class DetailMatchViewModel(val context: Context?, val detail: Match?, val search
     val detailMatch: LiveData<List<DetailMatch>>
         get() = _detailMatch
 
+    private val favoriteRepository: FavoriteMatchRepository
 
-
+    val isCheck: LiveData<Boolean>
 
     init {
 
-        _event.value = detail?.idEvent ?: search?.idEvent
+        _event.value = detail?.idEvent ?: search?.idEvent ?: favorite
 
         getDetailMatch(event.value.toString())
+
+        favoriteRepository = FavoriteMatchRepository(database)
+
+
+        /**The isFavoriteMatch method returns a LiveData from querying the database. The
+         * method can return null in two cases: when the database query is running and if no records
+         * are found. In these cases isPlanted is false. If a record is found then isPlanted is
+         * true.
+         **/
+        val check = favoriteRepository.isFavoriteMatch(event.value.toString())
+        isCheck = Transformations.map(check) {
+            it != null
+        }
     }
 
     fun getDetailMatch(idEvent: String) {
@@ -59,49 +75,19 @@ class DetailMatchViewModel(val context: Context?, val detail: Match?, val search
 
     }
 
-    fun insertFavorite(data: DetailMatch?) {
-        try {
-            context?.database?.use {
-                insert(
-                    Match.TABLE_FAVORITE_MATCH,
-                    Match.ID_EVENT to data?.idEvent,
-                    Match.DATE_EVENT to data?.dateEvent,
-                    Match.STR_TIME to data?.strTime,
-                    Match.ID_HOME_TEAM to data?.idHomeTeam,
-                    Match.ID_AWAY_TEAM to data?.idAwayTeam,
-                    Match.STR_HOME_TEAM to data?.strHomeTeam,
-                    Match.STR_AWAY_TEAM to data?.strAwayTeam,
-                    Match.INT_HOME_SCORE to data?.intHomeScore,
-                    Match.INT_AWAY_SCORE to data?.intAwayScore,
-                    Match.STR_HOME_GOAL_DETAILS to data?.strHomeGoalDetails,
-                    Match.STR_AWAY_GOAL_DETAILS to data?.strAwayGoalDetails,
-                    Match.STR_HOME_YELLOW_CARDS to data?.strHomeYellowCards,
-                    Match.STR_AWAY_YELLOW_CARDS to data?.strAwayYellowCards,
-                    Match.STR_HOME_RED_CARDS to data?.strHomeRedCards,
-                    Match.STR_AWAY_RED_CARDS to data?.strAwayRedCards
-                )
-            }
-            Toast.makeText(context, context?.getString(R.string.add_to_favorite), Toast.LENGTH_LONG).show()
-        } catch (e: SQLiteConstraintException) {
-            Log.e(TAG, "addFavorite = ${e.message}")
-        }
+    fun insert(favoriteMatch: FavoriteMatch) = viewModelScope.launch {
+        favoriteRepository.insert(favoriteMatch)
+
+
     }
 
-    fun deleteFavorite(data: DetailMatch?){
-        try {
-            context?.database?.use {
-                delete(
-                    Match.TABLE_FAVORITE_MATCH,
-                    Match.ID_EVENT+" ={id}",
-                    "id" to data?.idEvent.toString()
+    fun delete(favoriteMatch: FavoriteMatch) = viewModelScope.launch {
+        favoriteRepository.delete(favoriteMatch)
 
-                )
-            }
-            Toast.makeText(context, context?.getString(R.string.remove_from_favorite), Toast.LENGTH_LONG).show()
-        } catch (e: SQLiteConstraintException) {
-            Log.e(TAG, "removeFavorite = ${e.message}")
-        }
+
     }
+
+
 
     companion object {
         private val TAG = DetailMatchViewModel::class.java.simpleName

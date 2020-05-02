@@ -4,12 +4,15 @@ package relawan.kade2.view.detail.match
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.select
 import relawan.kade2.R
+import relawan.kade2.database.FavoriteMatch
+import relawan.kade2.database.MyDatabase
 import relawan.kade2.database.database
 import relawan.kade2.databinding.FragmentDetailMatchBinding
 import relawan.kade2.model.DetailMatch
@@ -26,7 +29,7 @@ class DetailMatchFragment : Fragment() {
     private var isFavorite: Boolean = false
     private var menuItem: Menu? = null
 
-    private var dataDetail: DetailMatch? = null
+    private lateinit var dataMatch: DetailMatch
 
 
     private lateinit var detailMatchViewModel: DetailMatchViewModel
@@ -47,13 +50,18 @@ class DetailMatchFragment : Fragment() {
         // lifeCycleOwner
         binding.lifecycleOwner = this
 
+        // database
+        val application = requireNotNull(this.activity).application
+        val dataSource = MyDatabase.getInstance(application).favoriteMatchDao
+
         // get argument from last/next match fragment or search fragment
         val detail = arguments?.let { DetailMatchFragmentArgs.fromBundle(it).detail }
         val search = arguments?.let { DetailMatchFragmentArgs.fromBundle(it).search }
-        val viewModelFactory = DetailMatchModelFactory(context, detail, search, repository)
+        val favorite = arguments?.let { DetailMatchFragmentArgs.fromBundle(it).favorite }
+        val viewModelFactory = DetailMatchModelFactory(dataSource, detail, search, favorite, repository)
 
         // viewModel
-        detailMatchViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailMatchViewModel::class.java)
+        detailMatchViewModel = ViewModelProvider(this, viewModelFactory).get(DetailMatchViewModel::class.java)
 
         // adapter
         val adapter = DetailMatchAdapter()
@@ -63,31 +71,32 @@ class DetailMatchFragment : Fragment() {
 
 
         // get viewModel and adapter to show list
-        detailMatchViewModel.detailMatch.observe(this, Observer {
-            it?.let {data ->
+        detailMatchViewModel.detailMatch.observe(viewLifecycleOwner, Observer {
+            it?.let {database ->
 
-                dataDetail = DetailMatch(
-                    data[0].dateEvent,
-                    data[0].idAwayTeam,
-                    data[0].idEvent,
-                    data[0].idHomeTeam,
-                    data[0].intAwayScore,
-                    data[0].intHomeScore,
-                    data[0].strAwayGoalDetails,
-                    data[0].strAwayRedCards,
-                    data[0].strAwayTeam,
-                    data[0].strAwayYellowCards,
-                    data[0].strHomeGoalDetails,
-                    data[0].strHomeRedCards,
-                    data[0].strHomeTeam,
-                    data[0].strHomeYellowCards,
-                    data[0].strTime)
+                dataMatch = DetailMatch(
+                    database[0].idEvent,
+                    database[0].dateEvent,
+                    database[0].strTime,
+                    database[0].idAwayTeam,
+                    database[0].idHomeTeam,
+                    database[0].strAwayTeam,
+                    database[0].strHomeTeam,
+                    database[0].intAwayScore,
+                    database[0].intHomeScore,
+                    database[0].strAwayGoalDetails,
+                    database[0].strHomeGoalDetails,
+                    database[0].strAwayRedCards,
+                    database[0].strHomeRedCards,
+                    database[0].strAwayYellowCards,
+                    database[0].strHomeYellowCards
+                )
 
                 // check state
-                favoriteState()
+                checkFavorite()
 
                 binding.progressBar.visibility = View.GONE
-                adapter.data = data
+                adapter.data = database
             }
         })
 
@@ -95,7 +104,12 @@ class DetailMatchFragment : Fragment() {
         return binding.root
     }
 
-
+    private fun checkFavorite() {
+        detailMatchViewModel.isCheck.observe(viewLifecycleOwner, Observer {
+            isFavorite = it
+            setFavorite()
+        })
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.favorite_menu, menu)
@@ -112,6 +126,7 @@ class DetailMatchFragment : Fragment() {
                 if (isFavorite) removeFavorites() else addFavorites()
 
                 isFavorite = !isFavorite
+
                 setFavorite()
 
                 true
@@ -123,12 +138,52 @@ class DetailMatchFragment : Fragment() {
     }
 
 
-    private fun addFavorites(){
-        detailMatchViewModel.insertFavorite(dataDetail)
+    private fun addFavorites() {
+        detailMatchViewModel.insert(
+            FavoriteMatch(
+                idEvent = dataMatch.idEvent!!,
+                dateEvent = dataMatch.dateEvent,
+                strTime = dataMatch.strTime,
+                idAwayTeam = dataMatch.idAwayTeam,
+                idHomeTeam = dataMatch.idHomeTeam,
+                strAwayTeam = dataMatch.strAwayTeam,
+                strHomeTeam = dataMatch.strHomeTeam,
+                intAwayScore = dataMatch.intAwayScore,
+                intHomeScore = dataMatch.intHomeScore,
+                strAwayGoalDetails = dataMatch.strAwayGoalDetails,
+                strHomeGoalDetails = dataMatch.strHomeGoalDetails,
+                strAwayRedCards = dataMatch.strAwayRedCards,
+                strHomeRedCards = dataMatch.strHomeRedCards,
+                strAwayYellowCards = dataMatch.strAwayYellowCards,
+                strHomeYellowCards = dataMatch.strHomeYellowCards
+            )
+        )
+        Log.d(TAG, "fun add $isFavorite")
+        Toast.makeText(context, "favorite = ${dataMatch.idEvent}", Toast.LENGTH_LONG).show()
     }
 
-    private fun removeFavorites(){
-        detailMatchViewModel.deleteFavorite(dataDetail)
+
+    private fun removeFavorites() {
+        detailMatchViewModel.delete(
+            FavoriteMatch(
+                idEvent = dataMatch.idEvent!!,
+                dateEvent = dataMatch.dateEvent,
+                strTime = dataMatch.strTime,
+                idAwayTeam = dataMatch.idAwayTeam,
+                idHomeTeam = dataMatch.idHomeTeam,
+                strAwayTeam = dataMatch.strAwayTeam,
+                strHomeTeam = dataMatch.strHomeTeam,
+                intAwayScore = dataMatch.intAwayScore,
+                intHomeScore = dataMatch.intHomeScore,
+                strAwayGoalDetails = dataMatch.strAwayGoalDetails,
+                strHomeGoalDetails = dataMatch.strHomeGoalDetails,
+                strAwayRedCards = dataMatch.strAwayRedCards,
+                strHomeRedCards = dataMatch.strHomeRedCards,
+                strAwayYellowCards = dataMatch.strAwayYellowCards,
+                strHomeYellowCards = dataMatch.strHomeYellowCards
+            )
+        )
+        Log.d(TAG, "fun delete $isFavorite")
     }
 
     private fun setFavorite() {
@@ -138,21 +193,6 @@ class DetailMatchFragment : Fragment() {
             menuItem?.getItem(0)?.setIcon(R.drawable.ic_add)
     }
 
-
-    private fun favoriteState(){
-        context?.database?.use {
-            val result = select(Match.TABLE_FAVORITE_MATCH)
-                .whereArgs(Match.ID_EVENT+" ={id}",
-                    "id" to dataDetail?.idEvent.toString())
-
-            val favorite = result.parseList(classParser<Match>())
-            if (favorite.isNotEmpty()) isFavorite = true
-
-            setFavorite()
-
-        }
-        Log.d(TAG, isFavorite.toString())
-    }
 
 
 }

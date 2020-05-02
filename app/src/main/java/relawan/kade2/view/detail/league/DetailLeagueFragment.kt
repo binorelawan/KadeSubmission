@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import relawan.kade2.databinding.FragmentDetailLeagueBinding
@@ -35,10 +36,10 @@ class DetailLeagueFragment : Fragment() {
 
         // get arguments from HomeFragment
         val league = arguments?.let { DetailLeagueFragmentArgs.fromBundle(it).league }
-        val viewModelFactory = league?.let { DetailLeagueModelFactory(it, repository) }
+        val viewModelFactory = DetailLeagueModelFactory(league, repository)
 
         // viewModel
-        detailLeagueViewModel = ViewModelProviders.of(this, viewModelFactory).get(
+        detailLeagueViewModel = ViewModelProvider(this, viewModelFactory).get(
             DetailLeagueViewModel::class.java)
 
         // detailLeague adapter
@@ -46,7 +47,7 @@ class DetailLeagueFragment : Fragment() {
         binding.leagueDetail.adapter = leagueAdapter
 
         // get viewModel and adapter to show list
-        detailLeagueViewModel.detail.observe(this, Observer {
+        detailLeagueViewModel.detail.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.progressBarDetail.visibility = View.GONE
                 binding.leagueDetail.visibility = View.VISIBLE
@@ -59,7 +60,7 @@ class DetailLeagueFragment : Fragment() {
         val tableAdapter = TableAdapter()
         binding.leagueTable.adapter = tableAdapter
 
-        detailLeagueViewModel.table.observe(this, Observer {
+        detailLeagueViewModel.table.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.progressBarTable.visibility = View.GONE
                 binding.leagueTable.visibility = View.VISIBLE

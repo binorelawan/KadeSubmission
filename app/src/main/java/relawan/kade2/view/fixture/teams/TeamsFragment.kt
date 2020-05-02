@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -33,21 +34,21 @@ class TeamsFragment : Fragment() {
 
         // get arguments
         val league = arguments?.let { TeamsFragmentArgs.fromBundle(it).league }
-        val viewModelFactory = league?.let { TeamsModelFactory(it, repository) }
+        val viewModelFactory = TeamsModelFactory(league, repository)
 
         // viewModel
-        teamsViewModel = ViewModelProviders.of(this, viewModelFactory).get(TeamsViewModel::class.java)
+        teamsViewModel = ViewModelProvider(this, viewModelFactory).get(TeamsViewModel::class.java)
 
         // adapter
         val adapter = TeamsAdapter(TeamsAdapter.OnClickListener {
             // navigate to detailTeamFragment with argument
-            val action = TeamsFragmentDirections.actionTeamsFragmentToDetailTeamFragment(it, null)
+            val action = TeamsFragmentDirections.actionTeamsFragmentToDetailTeamFragment(it, null, null)
             findNavController().navigate(action)
         })
         binding.teamsList.adapter = adapter
 
         // get viewModel and adapter to show list
-        teamsViewModel.teams.observe(this, Observer {
+        teamsViewModel.teams.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.progressBar.visibility = View.GONE
                 adapter.data = it

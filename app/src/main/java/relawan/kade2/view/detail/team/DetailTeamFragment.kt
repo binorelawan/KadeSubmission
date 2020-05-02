@@ -4,12 +4,16 @@ package relawan.kade2.view.detail.team
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.select
 import relawan.kade2.R
+import relawan.kade2.database.FavoriteTeam
+import relawan.kade2.database.MyDatabase
 import relawan.kade2.database.database
 import relawan.kade2.databinding.FragmentDetailTeamBinding
 import relawan.kade2.model.DetailTeam
@@ -24,7 +28,7 @@ class DetailTeamFragment : Fragment() {
     private var isFavorite: Boolean = false
     private var menuItem: Menu? = null
 
-    private var dataTeam: DetailTeam? = null
+    private lateinit var dataTeam: DetailTeam
 
     private lateinit var detailTeamViewModel: DetailTeamViewModel
 
@@ -43,35 +47,41 @@ class DetailTeamFragment : Fragment() {
         // lifeCycleOwner
         binding.lifecycleOwner = this
 
+        // database
+        val application = requireNotNull(this.activity).application
+        val dataSource = MyDatabase.getInstance(application).favoriteTeamDao
+
         // get argument from TeamsFragment
         val teams = arguments?.let { DetailTeamFragmentArgs.fromBundle(it).teams }
         val search = arguments?.let { DetailTeamFragmentArgs.fromBundle(it).search }
-        val viewModelFactory = DetailTeamModelFactory(context, teams, search, repository)
+        val favorite = arguments?.let { DetailTeamFragmentArgs.fromBundle(it).favorite }
+        val viewModelFactory = DetailTeamModelFactory(dataSource, teams, search, favorite, repository)
 
         // viewModel
-        detailTeamViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailTeamViewModel::class.java)
+        detailTeamViewModel = ViewModelProvider(this, viewModelFactory).get(DetailTeamViewModel::class.java)
 
         // adapter
         val adapter = DetailTeamAdapter()
         binding.teamDetail.adapter = adapter
 
         // get viewModel and adapter to show list
-        detailTeamViewModel.detailTeam.observe(this, Observer {
-            it?.let {data ->
+        detailTeamViewModel.detailTeam.observe(viewLifecycleOwner, Observer {
+            it?.let {database ->
 
                 dataTeam = DetailTeam(
-                    data[0].idLeague,
-                    data[0].idTeam,
-                    data[0].intFormedYear,
-                    data[0].strCountry,
-                    data[0].strDescriptionEN,
-                    data[0].strStadium,
-                    data[0].strTeam,
-                    data[0].strTeamBadge,
-                    data[0].strTeamBanner)
+                    database[0].idTeam,
+                    database[0].idLeague,
+                    database[0].intFormedYear,
+                    database[0].strCountry,
+                    database[0].strDescriptionEN,
+                    database[0].strStadium,
+                    database[0].strTeam,
+                    database[0].strTeamBadge,
+                    database[0].strTeamBanner
+                )
 
                 // check state
-                favoriteState()
+                checkFavorite()
 
                 binding.progressBar.visibility = View.GONE
                 adapter.data = it
@@ -81,6 +91,13 @@ class DetailTeamFragment : Fragment() {
 
         setHasOptionsMenu(true)
         return binding.root
+    }
+
+    private fun checkFavorite() {
+        detailTeamViewModel.isCheck.observe(viewLifecycleOwner, Observer {
+            isFavorite = it
+            setFavorite()
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -106,11 +123,38 @@ class DetailTeamFragment : Fragment() {
 
 
     private fun addFavorites() {
-        detailTeamViewModel.insertFavorite(dataTeam)
+        detailTeamViewModel.insert(
+            FavoriteTeam(
+                idTeam = dataTeam.idTeam!!,
+                idLeague = dataTeam.idLeague,
+                intFormedYear = dataTeam.intFormedYear,
+                strCountry = dataTeam.strCountry,
+                strDescriptionEN = dataTeam.strDescriptionEN,
+                strStadium = dataTeam.strStadium,
+                strTeam = dataTeam.strTeam,
+                strTeamBadge = dataTeam.strTeamBadge,
+                strTeamBanner = dataTeam.strTeamBanner
+            )
+        )
+        Toast.makeText(context, "Add Favorites", Toast.LENGTH_LONG).show()
     }
 
     private fun removeFavorites() {
-        detailTeamViewModel.deleteFavorite(dataTeam)
+        detailTeamViewModel.delete(
+            FavoriteTeam(
+                idTeam = dataTeam.idTeam!!,
+                idLeague = dataTeam.idLeague,
+                intFormedYear = dataTeam.intFormedYear,
+                strCountry = dataTeam.strCountry,
+                strDescriptionEN = dataTeam.strDescriptionEN,
+                strStadium = dataTeam.strStadium,
+                strTeam = dataTeam.strTeam,
+                strTeamBadge = dataTeam.strTeamBadge,
+                strTeamBanner = dataTeam.strTeamBanner
+            )
+        )
+        Toast.makeText(context, "Remove Favorites", Toast.LENGTH_LONG).show()
+
     }
 
     private fun setFavorite() {
@@ -121,17 +165,4 @@ class DetailTeamFragment : Fragment() {
     }
 
 
-    private fun favoriteState() {
-        context?.database?.use {
-            val result = select(Teams.TABLE_FAVORITE_TEAM)
-                .whereArgs(Teams.ID_LEAGUE+" ={id}",
-                    "id" to dataTeam?.idLeague.toString())
-
-            val favorite = result.parseList(classParser<Teams>())
-            if (favorite.isNotEmpty()) isFavorite = true
-
-            setFavorite()
-        }
-        Log.d(TAG, isFavorite.toString())
-    }
 }

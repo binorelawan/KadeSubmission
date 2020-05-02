@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -55,7 +56,7 @@ class SearchMatchFragment : Fragment() {
             SearchMatchModelFactory(repository)
 
         // viewModel
-        searchMatchViewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchMatchViewModel::class.java)
+        searchMatchViewModel = ViewModelProvider(this, viewModelFactory).get(SearchMatchViewModel::class.java)
 
         // adapter
         searchMatchAdapter =
@@ -64,7 +65,8 @@ class SearchMatchFragment : Fragment() {
                 val action =
                     SearchMatchFragmentDirections.actionSearchMatchFragmentToDetailMatchFragment(
                         null,
-                        it
+                        it,
+                        null
                     )
                 findNavController().navigate(action)
                 // close keyboard after click enter
@@ -83,7 +85,7 @@ class SearchMatchFragment : Fragment() {
     // get viewModel and adapter to show list
     private fun searchMatch() {
 
-        searchMatchViewModel.search.observe(this, Observer { list ->
+        searchMatchViewModel.search.observe(viewLifecycleOwner, Observer { list ->
             // filter strSport == "Soccer"
             val filter = list?.filter {search ->
                 search.strSport == "Soccer"

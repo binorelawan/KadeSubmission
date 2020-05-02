@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -20,11 +23,7 @@ import relawan.kade2.model.Teams
  */
 class FavoriteTeamFragment : Fragment() {
 
-    private var favorites: MutableList<Teams> = mutableListOf()
-    private lateinit var mAdapter: FavoriteTeamAdapter
-
-    private lateinit var favoriteRecycler: RecyclerView
-    private lateinit var favoriteSwipe: SwipeRefreshLayout
+    lateinit var favoriteTeamViewModel: FavoriteTeamViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,35 +34,26 @@ class FavoriteTeamFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-        favoriteRecycler = binding.favoriteRecycler
-        favoriteSwipe = binding.favoriteSwipe
+        favoriteTeamViewModel = ViewModelProvider(this).get(FavoriteTeamViewModel::class.java)
 
-        mAdapter = FavoriteTeamAdapter(favorites, FavoriteTeamAdapter.OnClickListener {
-
-            val action = FavoriteTeamFragmentDirections.actionFavoriteTeamFragmentToDetailTeamFragment(it, null)
+        val adapter = FavoriteTeamAdapter(FavoriteTeamAdapter.OnClickListener {
+            // navigate to detailTeamFragment with argument
+            val action = FavoriteTeamFragmentDirections.actionFavoriteTeamFragmentToDetailTeamFragment(null, null, it.idTeam)
             findNavController().navigate(action)
+            Toast.makeText(context, it.idLeague, Toast.LENGTH_LONG).show()
+
         })
 
-        favoriteRecycler.adapter = mAdapter
+        binding.favoriteRecycler.adapter = adapter
 
-        showFavorite()
-
-        favoriteSwipe.setOnRefreshListener {
-            showFavorite()
-        }
+        favoriteTeamViewModel.favoriteTeam.observe(viewLifecycleOwner, Observer {
+            it.let {
+                adapter.data = it
+            }
+        })
 
 
         return binding.root
     }
 
-    private fun showFavorite() {
-        favorites.clear()
-        context?.database?.use {
-            favoriteSwipe.isRefreshing = false
-            val result = select(Teams.TABLE_FAVORITE_TEAM)
-            val favorite = result.parseList(classParser<Teams>())
-            favorites.addAll(favorite)
-            mAdapter.notifyDataSetChanged()
-        }
-    }
 }

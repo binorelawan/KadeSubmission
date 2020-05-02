@@ -4,23 +4,29 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import relawan.kade2.R
+import relawan.kade2.database.FavoriteMatch
 import relawan.kade2.databinding.ListFavoriteMatchBinding
 import relawan.kade2.model.Match
 import relawan.kade2.utils.DateTime
 
-class FavoriteMatchAdapter(private val favorite: List<Match>, private val onClickListener: OnClickListener) : RecyclerView.Adapter<FavoriteMatchAdapter.ViewHolder>() {
+class FavoriteMatchAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<FavoriteMatchAdapter.ViewHolder>() {
 
+    var data = listOf<FavoriteMatch>()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
     }
 
     override fun getItemCount(): Int {
-        return favorite.size
+        return data.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = favorite[position]
+        val item = data[position]
         holder.itemView.setOnClickListener {
             onClickListener.onClick(item)
         }
@@ -31,7 +37,7 @@ class FavoriteMatchAdapter(private val favorite: List<Match>, private val onClic
 
         private val strip = itemView.resources.getString(R.string.strip)
 
-        fun bind(item : Match){
+        fun bind(item : FavoriteMatch){
             val date = DateTime.getDate("${item.dateEvent} ${item.strTime}")
             binding.dateFixture.text = date.substringBeforeLast(";")
             binding.teamHome.text = item.strHomeTeam
@@ -57,7 +63,7 @@ class FavoriteMatchAdapter(private val favorite: List<Match>, private val onClic
     }
 
     // click listener
-    class OnClickListener(val clickListener: (favoriteMatch: Match) -> Unit) {
-        fun onClick(favoriteMatch: Match) = clickListener(favoriteMatch)
+    class OnClickListener(val clickListener: (favoriteMatch: FavoriteMatch) -> Unit) {
+        fun onClick(favoriteMatch: FavoriteMatch) = clickListener(favoriteMatch)
     }
 }

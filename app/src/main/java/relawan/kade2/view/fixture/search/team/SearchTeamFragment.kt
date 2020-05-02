@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -54,12 +55,12 @@ class SearchTeamFragment : Fragment() {
         val viewModelFactory = SearchTeamModelFactory(repository)
 
         // viewModel
-        searchTeamViewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchTeamViewModel::class.java)
+        searchTeamViewModel = ViewModelProvider(this, viewModelFactory).get(SearchTeamViewModel::class.java)
 
         // adapter
         searchTeamAdapter = SearchTeamAdapter(SearchTeamAdapter.OnClickListener {
             // navigate to detailTeamFragment with argument
-            val action = SearchTeamFragmentDirections.actionSearchTeamFragmentToDetailTeamFragment(null, it)
+            val action = SearchTeamFragmentDirections.actionSearchTeamFragmentToDetailTeamFragment(null, it, null)
             findNavController().navigate(action)
             // close keyboard after click enter
             searchView.clearFocus()
@@ -76,7 +77,7 @@ class SearchTeamFragment : Fragment() {
     // get viewModel and adapter to show list
     private fun searchTeam() {
 
-        searchTeamViewModel.search.observe(this, Observer { list ->
+        searchTeamViewModel.search.observe(viewLifecycleOwner, Observer { list ->
             // filter strSport == "Soccer"
             val filter = list?.filter { search ->
                 search.strSport == "Soccer"

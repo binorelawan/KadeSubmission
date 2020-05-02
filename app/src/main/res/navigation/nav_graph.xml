@@ -101,6 +101,10 @@
             android:name="search"
             app:argType="relawan.kade2.model.SearchTeam"
             app:nullable="true"/>
+        <argument
+            android:name="favorite"
+            app:argType="string"
+            app:nullable="true"/>
     </fragment>
 
     <fragment
@@ -115,6 +119,10 @@
         <argument
             android:name="search"
             app:argType="relawan.kade2.model.SearchMatch"
+            app:nullable="true"/>
+        <argument
+            android:name="favorite"
+            app:argType="string"
             app:nullable="true"/>
     </fragment>
 
