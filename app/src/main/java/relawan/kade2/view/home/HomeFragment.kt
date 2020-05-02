@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import relawan.kade2.R
 import relawan.kade2.databinding.FragmentHomeBinding
+import relawan.kade2.repository.Repository
 
 /**
  * A simple [Fragment] subclass.
@@ -17,6 +19,8 @@ import relawan.kade2.databinding.FragmentHomeBinding
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
+
+    private val repository = Repository()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,8 +32,10 @@ class HomeFragment : Fragment() {
         // lifeCycleOwner
         binding.lifecycleOwner = this
 
+        val viewModelFactory = HomeModelFactory(repository)
+
         // viewModel
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
 
         // adapter
@@ -41,7 +47,7 @@ class HomeFragment : Fragment() {
         binding.leagueList.adapter = adapter
 
         // get viewModel and adapter to show list
-        homeViewModel.leagueName.observe(this, Observer {
+        homeViewModel.leagueName.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.progressBar.visibility = View.GONE
                 adapter.data = it
@@ -60,7 +66,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // navigate to SearchFragment
+        // navigate to SearchMatchFragment
         view?.findNavController()?.navigate(R.id.action_home_to_searchFragment)
         return super.onOptionsItemSelected(item)
 

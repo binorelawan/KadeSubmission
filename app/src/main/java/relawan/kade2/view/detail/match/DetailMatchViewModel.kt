@@ -1,80 +1,93 @@
 package relawan.kade2.view.detail.match
 
-import android.app.Application
+import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.widget.Toast
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
+import org.jetbrains.anko.db.delete
+import org.jetbrains.anko.db.insert
+import relawan.kade2.R
+import relawan.kade2.database.FavoriteMatch
+import relawan.kade2.database.FavoriteMatchDao
+import relawan.kade2.database.database
 import relawan.kade2.model.DetailMatch
-import relawan.kade2.model.DetailMatchResponse
 import relawan.kade2.model.Match
-import relawan.kade2.model.Search
-import relawan.kade2.network.LeagueApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import relawan.kade2.model.SearchMatch
+import relawan.kade2.repository.DetailMatchRepoCallback
+import relawan.kade2.repository.FavoriteMatchRepository
+import relawan.kade2.repository.Repository
 
-class DetailMatchViewModel(detail: Match?, search: Search?, application: Application) : AndroidViewModel(application) {
-
-//    private val _idEventLast = MutableLiveData<LastMatch?>()
-//    private val idEventLast: LiveData<LastMatch?>
-//        get() = _idEventLast
-//
-//    private val _idEventNext = MutableLiveData<NextMatch?>()
-//    private val idEventNext: LiveData<NextMatch?>
-//        get() = _idEventNext
-
-
-    private val _idDetail = MutableLiveData<Match>()
-    private val idDetail: LiveData<Match>
-        get() = _idDetail
-
-    private val _idSearch = MutableLiveData<Search>()
-    private val idSearch: LiveData<Search>
-        get() = _idSearch
+class DetailMatchViewModel(val database: FavoriteMatchDao, val detail: Match?, val search: SearchMatch?, val favorite: String?, val repository: Repository) : ViewModel() {
 
     private val _event = MutableLiveData<String>()
     val event: LiveData<String>
         get() = _event
 
-    private val _detail = MutableLiveData<List<DetailMatch>>()
-    val detail: LiveData<List<DetailMatch>>
-        get() = _detail
+    // detail match liveData
+    private val _detailMatch = MutableLiveData<List<DetailMatch>>()
+    val detailMatch: LiveData<List<DetailMatch>>
+        get() = _detailMatch
 
+    private val favoriteRepository: FavoriteMatchRepository
 
+    val isCheck: LiveData<Boolean>
 
     init {
-//        _idEventLast.value = detailLast
-//        _idEventNext.value = detailNext
-        _idDetail.value = detail
-        _idSearch.value = search
 
-//        _event.value = idEventLast.value?.idEvent ?: idEventNext.value?.idEvent
-        _event.value = idDetail.value?.idEvent ?: idSearch.value?.idEvent
+        _event.value = detail?.idEvent ?: search?.idEvent ?: favorite
 
-        getDetailMatch()
-    }
+        getDetailMatch(event.value.toString())
 
-    private fun getDetailMatch() {
+        favoriteRepository = FavoriteMatchRepository(database)
 
-        event.value?.let {
-            LeagueApi.retrofitService.getDetailMatch(it).enqueue(object : Callback<DetailMatchResponse>{
-                override fun onFailure(call: Call<DetailMatchResponse>, t: Throwable) {
-                    Log.d(TAG, t.message!!)
-                    Log.d(TAG, event.value!!)
-                }
 
-                override fun onResponse(call: Call<DetailMatchResponse>, response: Response<DetailMatchResponse>) {
-                    _detail.value = response.body()?.events
-                    Log.d(TAG, "${event.value} success")
-                }
-
-            })
+        /**The isFavoriteMatch method returns a LiveData from querying the database. The
+         * method can return null in two cases: when the database query is running and if no records
+         * are found. In these cases isPlanted is false. If a record is found then isPlanted is
+         * true.
+         **/
+        val check = favoriteRepository.isFavoriteMatch(event.value.toString())
+        isCheck = Transformations.map(check) {
+            it != null
         }
+    }
+
+    fun getDetailMatch(idEvent: String) {
+
+
+        repository.getDetailMatchRepo(idEvent, object : DetailMatchRepoCallback {
+            override fun onError() {
+                Log.d(TAG, "error")
+
+            }
+
+            override fun onSuccess(detailMatch: List<DetailMatch>) {
+
+                _detailMatch.value = detailMatch
+                Log.d(TAG, "Success: ${detailMatch.size}")
+            }
+
+        })
 
 
 
     }
+
+    fun insert(favoriteMatch: FavoriteMatch) = viewModelScope.launch {
+        favoriteRepository.insert(favoriteMatch)
+
+
+    }
+
+    fun delete(favoriteMatch: FavoriteMatch) = viewModelScope.launch {
+        favoriteRepository.delete(favoriteMatch)
+
+
+    }
+
+
 
     companion object {
         private val TAG = DetailMatchViewModel::class.java.simpleName

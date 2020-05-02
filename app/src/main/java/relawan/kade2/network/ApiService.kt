@@ -60,17 +60,37 @@ interface LeagueApiService {
 //    searchevents.php?e={query}
     // get Search match fixture
     @GET("searchevents.php")
-    fun getSearch(
+    fun getSearchMatch(
         @Query("e") query: String):
-            Call<SearchResponse?>
+            Call<SearchMatchResponse?>
+
+//    lookuptable.php?l={idLeague}
+    // get league tables
+    @GET("lookuptable.php")
+    fun getTable(
+        @Query("l") idLeague: String):
+            Call<TableResponse>
+
+//    lookup_all_teams.php?id={idLeague}
+    // get league teams
+    @GET("lookup_all_teams.php")
+    fun getTeams(
+        @Query("id") idLeague: String):
+            Call<TeamsResponse>
 
 //    lookupteam.php?id={idTeam}
-    // get team detail (logo)
+    // get team detail
     @GET("lookupteam.php")
-    fun getTeam(
+    fun getDetailTeam(
         @Query("id") idTeam: String):
             Call<DetailTeamResponse>
 
+//    searchteams.php?t={query}
+    // get Search team
+    @GET("searchteams.php")
+    fun getSearchTeam(
+        @Query("t") query: String):
+            Call<SearchTeamResponse>
 
 }
 

@@ -1,53 +1,64 @@
 package relawan.kade2.view.detail.league
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import relawan.kade2.model.DetailLeague
-import relawan.kade2.model.DetailLeagueResponse
 import relawan.kade2.model.League
-import relawan.kade2.network.LeagueApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import relawan.kade2.model.Table
+import relawan.kade2.repository.DetailLeagueRepoCallback
+import relawan.kade2.repository.Repository
+import relawan.kade2.repository.TableLeagueRepoCallback
 
-class DetailLeagueViewModel(league : League, application: Application): AndroidViewModel(application) {
-
-    // get idLeague passing for call getDetailLeague()
-    private val _idLeague = MutableLiveData<League>()
-    private val idLeague: LiveData<League>
-        get() = _idLeague
+class DetailLeagueViewModel(val league : League, val repository: Repository): ViewModel() {
 
     // detail league liveData
     private val _detail = MutableLiveData<List<DetailLeague>>()
     val detail: LiveData<List<DetailLeague>>
         get() = _detail
 
+    private val _table = MutableLiveData<List<Table>>()
+    val table: LiveData<List<Table>>
+        get() = _table
 
     init {
-        //get _idLeague value from argument(SafeArgs) sent by HomeFragment
-        _idLeague.value = league
 
-        getDetailLeague()
+        getDetailLeague(league.idLeague.toString())
+        getTableLeague(league.idLeague.toString())
+
     }
 
-    private fun getDetailLeague() {
 
-        idLeague.value?.idLeague?.let {
-            LeagueApi.retrofitService.getDetailLeague(it).enqueue(object : Callback<DetailLeagueResponse>{
-                override fun onFailure(call: Call<DetailLeagueResponse>, t: Throwable) {
-                    Log.d(TAG, t.message!!)
-                }
+    fun getDetailLeague(idLeague: String) {
 
-                override fun onResponse(call: Call<DetailLeagueResponse>, response: Response<DetailLeagueResponse>) {
-                    _detail.value = response.body()?.leagues
-                    Log.d(TAG, "success")
-                }
+        repository.getDetailLeagueRepo(idLeague, object : DetailLeagueRepoCallback {
+            override fun onError() {
+                Log.d(TAG, "error")
 
-            })
-        }
+            }
+
+            override fun onSuccess(detailLeague: List<DetailLeague>) {
+                _detail.value = detailLeague
+                Log.d(TAG, "Success: ${detailLeague.size}")
+            }
+
+        })
+    }
+
+    fun getTableLeague(idLeague: String) {
+
+        repository.getTableLeagueRepo(idLeague, object : TableLeagueRepoCallback {
+            override fun onError() {
+                Log.d(TAG, "error")
+            }
+
+            override fun onSuccess(table: List<Table>) {
+                _table.value = table
+                Log.d(TAG, "Success: ${table.size}")
+            }
+
+        })
     }
 
 

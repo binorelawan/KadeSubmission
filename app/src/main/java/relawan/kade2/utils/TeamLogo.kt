@@ -15,7 +15,7 @@ object TeamLogo {
 
 
     fun getTeamLogo(idTeam: String, callback: TeamItemCallback) {
-        LeagueApi.retrofitService.getTeam(idTeam).enqueue(object : Callback<DetailTeamResponse>{
+        LeagueApi.retrofitService.getDetailTeam(idTeam).enqueue(object : Callback<DetailTeamResponse>{
             override fun onFailure(call: Call<DetailTeamResponse>, t: Throwable) {
                 callback.onError()
                 Log.d(TAG, t.message!!)

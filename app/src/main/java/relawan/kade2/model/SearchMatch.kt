@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Search(
+data class SearchMatch(
     val dateEvent: String?,
     val dateEventLocal: String?,
     val idAwayTeam: String?,
